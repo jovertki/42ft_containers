@@ -2,7 +2,7 @@
 
 
 #include <iostream>
-
+//how does this not segfault????
 int main() {
 	std::allocator<int> alloc;
 	int* pointer = alloc.allocate( 5 );
