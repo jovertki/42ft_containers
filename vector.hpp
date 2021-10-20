@@ -7,20 +7,121 @@
 namespace ft {
 	template <class Cont>
 	class VectorIterator {
-		using value_type = Cont::value_type;
+		typedef typename Cont::value_type value_type;
+		typedef typename Cont::difference_type diff_type;
+		typedef typename Cont::size_type size_type;
 		value_type* _ptr;
 	public:
 		VectorIterator( value_type* ptr) {
 			_ptr = ptr;
 		}
+		value_type& operator*() const{
+			return *_ptr;
+		}
+
+		//INCREMENTS DECREMENTS
+		VectorIterator& operator++() {
+			_ptr++;
+			return *this;
+		}
+		VectorIterator operator++( int ) {
+			VectorIterator iterator = *this;
+			_ptr++;
+			return iterator;
+		}
+		VectorIterator& operator--() {
+			_ptr--;
+			return *this;
+		}
+		VectorIterator operator--( int ) {
+			VectorIterator iterator = *this;
+			_ptr--;
+			return iterator;
+		}
+		
+		VectorIterator operator+=( diff_type a ) {
+			_ptr += a;
+			return *this;
+		}
+		VectorIterator operator-=( diff_type a ) {
+			_ptr -= a;
+			return *this;
+		}
+		VectorIterator* operator->() const{
+			return _ptr;
+		}
+		VectorIterator& operator[]( size_type index ) const {
+			return *(_ptr + index);
+		}
+		
+		//COMPARE
+		bool operator==( const VectorIterator& a )const {
+			if(this->_ptr == a.ptr)
+				return true;
+			return false;
+		}
+		bool operator!=( const VectorIterator& a ) const {
+			if(this->_ptr != a.ptr)
+				return true;
+			return false;
+		}
+		bool operator<( const VectorIterator& a )const {
+			if(this->_ptr < a.ptr)
+				return true;
+			return false;
+		}
+		bool operator>( const VectorIterator& a )const {
+			if(this->_ptr > a.ptr)
+				return true;
+			return false;
+		}
+		bool operator<=( const VectorIterator& a )const {
+			if(this->_ptr <= a.ptr)
+				return true;
+			return false;
+		}
+		bool operator>=( const VectorIterator& a )const {
+			if(this->_ptr >= a.ptr)
+				return true;
+			return false;
+		}
+
+		// VectorIterator operator+( const VectorIterator& a, const VectorIterator& b )const {
+			
+		// 	return VectorIterator(a._ptr);
+		// }
 	};
 
+	template <class Cont>
+	VectorIterator<Cont> operator+( typename Cont::difference_type a, const VectorIterator<Cont> b) {
+		VectorIterator<Cont> out( &(*b) + a );
+		return out;
+	}
+
+	template <class Cont>
+	VectorIterator<Cont> operator+( const VectorIterator<Cont> b, typename Cont::difference_type a) {
+		VectorIterator<Cont> out( &(*b) + a );
+		return out;
+	}
+	
+	template <class Cont>
+	VectorIterator<Cont> operator-( typename Cont::difference_type a, const VectorIterator<Cont> b ) {
+		VectorIterator<Cont> out( &(*b) - a );
+		return out;
+	}
+
+	template <class Cont>
+	VectorIterator<Cont> operator-( const VectorIterator<Cont> b, typename Cont::difference_type a ) {
+		VectorIterator<Cont> out( &(*b) - a );
+		return out;
+	}
 
 
 
 	
 	template <class T, class Allocator = std::allocator<T> >
 	class vector {
+	public:
 		typedef T									value_type;
 		typedef Allocator							allocator_type;
 		typedef std::size_t							size_type;
@@ -29,11 +130,11 @@ namespace ft {
 		typedef const value_type& 					const_reference;
 		typedef typename Allocator::pointer			pointer;
 		typedef typename Allocator::const_pointer 	const_pointer;
-		typedef typename std::iterator < std::random_access_iterator_tag, value_type > iterator;
+		typedef VectorIterator< vector<T, Allocator> > iterator;
 		typedef typename std::iterator < std::random_access_iterator_tag, const value_type > const_iterator; //is it though???
 		typedef typename std::reverse_iterator<iterator> reverse_iterator;
 		typedef typename std::reverse_iterator<const_iterator> const_reverse_iterator;
-
+	private:
 		allocator_type _alloc;
 		size_type _size;
 		size_type _capacity;
@@ -125,8 +226,14 @@ namespace ft {
 			}
 		}
 		// //(2)
-		// template< class InputIt >
-		// void assign( InputIt first, InputIt last );
+		template< class InputIt >
+		void assign( InputIt first, InputIt last ) {
+			clear();
+			while(first != last) {
+				push_back( *first );
+				first++;
+			}
+		}
 
 
 		//get_allocator
@@ -196,7 +303,7 @@ namespace ft {
 		//CAPACITY
 		//empty
 		bool empty() const {
-			//begin() == end()
+			begin() == end()
 		}
 
 		//size

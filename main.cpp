@@ -46,6 +46,18 @@ int main() {
 		// 	std::cout << vector3[i] << std::endl;
 		// }
 		// std::cout << "_____--------______" << std::endl;
+
+
+		ft::vector<std::string> vector4;
+		vector4.push_back( "First to deref" );
+		vector4.push_back( "Second to deref" );
+		vector4.push_back( "THirrd to deref" );
+		vector4.push_back( "Fourth to deref" );
+		std::cout << *vector4.begin() << std::endl;
+		ft::vector<std::string>::iterator it = vector4.begin();
+		it++;
+		it = it + 1;
+		std::cout << *it << std::endl;
 	}
 	system( "leaks containers" );
 }
