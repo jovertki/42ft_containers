@@ -58,6 +58,26 @@ int main() {
 		it++;
 		it = it + 1;
 		std::cout << *it << std::endl;
+
+
+
+
+		ft::vector<std::string>::iterator itt = vector4.begin();
+		ft::vector<std::string>::iterator itt2 = vector4.begin() + 1;
+		std::cout << "iter - check" << std::endl;
+		std::cout << (itt2 - itt) << std::endl;
+	}
+
+	{
+		std::vector<std::string> vector;
+		vector.push_back( "First to deref" );
+		vector.push_back( "Second to deref" );
+		vector.push_back( "THirrd to deref" );
+		vector.push_back( "Fourth to deref" );
+		std::vector<std::string>::iterator it = vector.begin();
+		std::vector<std::string>::iterator it2 = vector.begin() + 1;
+		std::cout << "iter - check" << std::endl;
+		std::cout << (it2 - it) << std::endl;
 	}
 	system( "leaks containers" );
 }

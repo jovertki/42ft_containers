@@ -12,10 +12,22 @@ namespace ft {
 		typedef typename Cont::size_type size_type;
 		value_type* _ptr;
 	public:
-		VectorIterator( value_type* ptr) {
-			_ptr = ptr;
+		VectorIterator( value_type* ptr) : _ptr(ptr){}
+		VectorIterator( VectorIterator const& a ) : _ptr( a._ptr ) {}
+		VectorIterator& operator=( VectorIterator const& a) {
+			if(this != &a) {
+				_ptr = a.ptr;
+			}
+			return (*this)
 		}
-		value_type& operator*() const{
+		virtual ~VectorIterator() {}
+
+
+		
+		value_type& operator*() {
+			return *_ptr;
+		}
+		const value_type& operator*() const {
 			return *_ptr;
 		}
 
@@ -85,33 +97,33 @@ namespace ft {
 				return true;
 			return false;
 		}
-
-		// VectorIterator operator+( const VectorIterator& a, const VectorIterator& b )const {
-			
-		// 	return VectorIterator(a._ptr);
-		// }
 	};
+	template <class Cont>
+	typename Cont::difference_type
+		operator-( const VectorIterator<Cont>& a, const VectorIterator<Cont>& b ) {
+		return static_cast<typename Cont::difference_type>(&(*a) - &(*b));
+	}
 
 	template <class Cont>
-	VectorIterator<Cont> operator+( typename Cont::difference_type a, const VectorIterator<Cont> b) {
+	VectorIterator<Cont> operator+( const typename Cont::difference_type a, const VectorIterator<Cont> b ) {
 		VectorIterator<Cont> out( &(*b) + a );
 		return out;
 	}
 
 	template <class Cont>
-	VectorIterator<Cont> operator+( const VectorIterator<Cont> b, typename Cont::difference_type a) {
+	VectorIterator<Cont> operator+( const VectorIterator<Cont> b, const typename Cont::difference_type a ) {
 		VectorIterator<Cont> out( &(*b) + a );
 		return out;
 	}
 	
 	template <class Cont>
-	VectorIterator<Cont> operator-( typename Cont::difference_type a, const VectorIterator<Cont> b ) {
+	VectorIterator<Cont> operator-( const typename Cont::difference_type a, const VectorIterator<Cont> b ) {
 		VectorIterator<Cont> out( &(*b) - a );
 		return out;
 	}
 
 	template <class Cont>
-	VectorIterator<Cont> operator-( const VectorIterator<Cont> b, typename Cont::difference_type a ) {
+	VectorIterator<Cont> operator-( const VectorIterator<Cont> b, const typename Cont::difference_type a ) {
 		VectorIterator<Cont> out( &(*b) - a );
 		return out;
 	}
@@ -303,7 +315,7 @@ namespace ft {
 		//CAPACITY
 		//empty
 		bool empty() const {
-			begin() == end()
+			begin() == end();
 		}
 
 		//size
