@@ -3,132 +3,9 @@
 #include <memory>
 #include <cstddef>
 #include <iterator>
+#include "VectorIterator.hpp"
 
 namespace ft {
-	template <class Cont>
-	class VectorIterator {
-		typedef typename Cont::value_type value_type;
-		typedef typename Cont::difference_type diff_type;
-		typedef typename Cont::size_type size_type;
-		value_type* _ptr;
-	public:
-		VectorIterator( value_type* ptr) : _ptr(ptr){}
-		VectorIterator( VectorIterator const& a ) : _ptr( a._ptr ) {}
-		VectorIterator& operator=( VectorIterator const& a) {
-			if(this != &a) {
-				_ptr = a._ptr;
-			}
-			return (*this);
-		}
-		virtual ~VectorIterator() {}
-
-
-		
-		value_type& operator*() {
-			return *_ptr;
-		}
-		const value_type& operator*() const {
-			return *_ptr;
-		}
-
-		//INCREMENTS DECREMENTS
-		VectorIterator& operator++() {
-			_ptr++;
-			return *this;
-		}
-		VectorIterator operator++( int ) {
-			VectorIterator iterator = *this;
-			_ptr++;
-			return iterator;
-		}
-		VectorIterator& operator--() {
-			_ptr--;
-			return *this;
-		}
-		VectorIterator operator--( int ) {
-			VectorIterator iterator = *this;
-			_ptr--;
-			return iterator;
-		}
-		
-		VectorIterator operator+=( diff_type a ) {
-			_ptr += a;
-			return *this;
-		}
-		VectorIterator operator-=( diff_type a ) {
-			_ptr -= a;
-			return *this;
-		}
-		VectorIterator* operator->() const{
-			return _ptr;
-		}
-		VectorIterator& operator[]( size_type index ) const {
-			return *(_ptr + index);
-		}
-		
-		//COMPARE
-		bool operator==( const VectorIterator& a )const {
-			if(this->_ptr == a.ptr)
-				return true;
-			return false;
-		}
-		bool operator!=( const VectorIterator& a ) const {
-			if(this->_ptr != a.ptr)
-				return true;
-			return false;
-		}
-		bool operator<( const VectorIterator& a )const {
-			if(this->_ptr < a.ptr)
-				return true;
-			return false;
-		}
-		bool operator>( const VectorIterator& a )const {
-			if(this->_ptr > a.ptr)
-				return true;
-			return false;
-		}
-		bool operator<=( const VectorIterator& a )const {
-			if(this->_ptr <= a.ptr)
-				return true;
-			return false;
-		}
-		bool operator>=( const VectorIterator& a )const {
-			if(this->_ptr >= a.ptr)
-				return true;
-			return false;
-		}
-	};
-	template <class Cont>
-	typename Cont::difference_type
-		operator-( const VectorIterator<Cont>& a, const VectorIterator<Cont>& b ) {
-		return static_cast<typename Cont::difference_type>(&(*a) - &(*b));
-	}
-
-	template <class Cont>
-	VectorIterator<Cont> operator+( const typename Cont::difference_type a, const VectorIterator<Cont> b ) {
-		return VectorIterator<Cont>( const_cast<typename Cont::value_type*> (&(*b) + a ));
-	}
-
-	template <class Cont>
-	VectorIterator<Cont> operator+( const VectorIterator<Cont> b, const typename Cont::difference_type a ) {
-		return VectorIterator<Cont>( const_cast<typename Cont::value_type*> (&(*b) + a) );
-	}
-
-	template <class Cont>
-	VectorIterator<Cont> operator-( const typename Cont::difference_type a, const VectorIterator<Cont> b ) {
-		VectorIterator<Cont> out( &(*b) - a );
-		return out;
-	}
-
-	template <class Cont>
-	VectorIterator<Cont> operator-( const VectorIterator<Cont> b, const typename Cont::difference_type a ) {
-		VectorIterator<Cont> out( &(*b) - a );
-		return out;
-	}
-
-
-
-	
 	template <class T, class Allocator = std::allocator<T> >
 	class vector {
 	public:
@@ -141,7 +18,7 @@ namespace ft {
 		typedef typename Allocator::pointer			pointer;
 		typedef typename Allocator::const_pointer 	const_pointer;
 		typedef VectorIterator< vector<T, Allocator> > iterator;
-		typedef VectorIterator< const vector<T, Allocator> > const_iterator; //is it though???
+		typedef VectorIterator< const vector<const T, Allocator> > const_iterator; //is it though???
 		typedef typename std::reverse_iterator<iterator> reverse_iterator;
 		typedef typename std::reverse_iterator<const_iterator> const_reverse_iterator;
 	private:
@@ -165,21 +42,21 @@ namespace ft {
 		}
 	public:
 		//BASE MEMBERS
+		
 		//default constructor
 		explicit vector( const allocator_type& alloc = allocator_type() ) :
 			_alloc( alloc ), _size( 0 ), _capacity( 0 ), _data( _alloc.allocate( 0 )) {
 		}
 
-		// //fill constructor
-		// explicit vector( size_type n, const value_type& val = value_type(),
-		// 	const allocator_type& alloc = allocator_type() ) {
-		// 	_data = alloc.allocate( n );
-		// 	for(size_type i = 0; i < n; i++) {
-		// 		_data[i] = val;
-		// 	}
-		// 	_size = n;
-		// 	_capacity = n;
-		// }
+		//fill constructor
+		explicit vector( size_type n, const value_type& val = value_type(),
+			const allocator_type& alloc = allocator_type() ) : _alloc( alloc ), _size( n ), _capacity( n ), _data( _alloc.allocate( n ) ) {
+			for(size_type i = 0; i < n; i++) {
+				_alloc.construct( &_data[i], val );
+			}
+			_size = n;
+			_capacity = n;
+		}
 
 		// //range constructor
 		// template <class InputIterator>

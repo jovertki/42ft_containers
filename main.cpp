@@ -80,5 +80,16 @@ int main() {
 		std::cout << "iter - check" << std::endl;
 		std::cout << (it2 - it) << std::endl;
 	}
+
+
+
+
+	{
+		std::cout << "--------Const vector check--------" << std::endl;
+		const ft::vector<int> vec( 5, 42 );
+		for(ft::vector<int>::const_iterator it = vec.begin(); it != vec.end(); it = 1 + it) {
+			std::cout << *it << std::endl;
+		}
+	}
 	system( "leaks containers" );
 }
