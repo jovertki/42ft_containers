@@ -60,16 +60,16 @@ namespace ft {
 			_capacity = n;
 		}
 
-		//range constructor
-		template <class InputIterator>
-		vector( InputIterator first, InputIterator last,
-			const allocator_type& alloc = allocator_type() ) : _alloc( alloc ), _size( last - first ), _capacity( last - first ), _data( _alloc.allocate( last - first ) ) {
-			size_type i = 0;
-			for(; first < last; first++) {
-				alloc.construct( &_data[i], *first );
-				i++;
-			}
-		}
+		// //range constructor
+		// template <class InputIterator>
+		// vector( InputIterator first, InputIterator last,
+		// 	const allocator_type& alloc = allocator_type() ) : _alloc( alloc ), _size( last - first ), _capacity( last - first ), _data( _alloc.allocate( last - first ) ) {
+		// 	size_type i = 0;
+		// 	for(; first < last; first++) {
+		// 		alloc.construct( &_data[i], *first );
+		// 		i++;
+		// 	}
+		// }
 
 		//copy constructor
 		vector( const vector& x ) :
