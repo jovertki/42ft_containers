@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <iterator>
 #include "VectorIterator.hpp"
+#include "ReverseIterator.hpp"
+
 
 namespace ft {
 	template <class T, class Allocator = std::allocator<T> >
@@ -17,10 +19,10 @@ namespace ft {
 		typedef const value_type& 					const_reference;
 		typedef typename Allocator::pointer			pointer;
 		typedef typename Allocator::const_pointer 	const_pointer;
-		typedef VectorIterator< vector<T, Allocator> > iterator;
-		typedef VectorIterator< const vector<const T, Allocator> > const_iterator; //is it though???
-		typedef typename std::reverse_iterator<iterator> reverse_iterator;
-		typedef typename std::reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef VectorIterator<value_type> iterator;
+		typedef VectorIterator< const value_type> const_iterator; //is it though???
+		typedef ReverseIterator<iterator> reverse_iterator;
+		typedef ReverseIterator<const_iterator> const_reverse_iterator;
 	private:
 		allocator_type _alloc;
 		size_type _size;
@@ -58,19 +60,16 @@ namespace ft {
 			_capacity = n;
 		}
 
-		// //range constructor
-		// template <class InputIterator>
-		// vector( InputIterator first, InputIterator last,
-		// 	const allocator_type& alloc = allocator_type() ) {
-		// 	_data = alloc.allocate( static_cast<size_type> (last - first) );
-		// 	size_type j = 0;
-		// 	for(InputIterator i = first; i != last; i++) {
-		// 		*i = _data[j];
-		// 		j++;
-		// 	}
-		// 	_size = j;
-		// 	_capacity = j;
-		// }
+		//range constructor
+		template <class InputIterator>
+		vector( InputIterator first, InputIterator last,
+			const allocator_type& alloc = allocator_type() ) : _alloc( alloc ), _size( last - first ), _capacity( last - first ), _data( _alloc.allocate( last - first ) ) {
+			size_type i = 0;
+			for(; first < last; first++) {
+				alloc.construct( &_data[i], *first );
+				i++;
+			}
+		}
 
 		//copy constructor
 		vector( const vector& x ) :
@@ -187,6 +186,24 @@ namespace ft {
 		const_iterator end() const{
 			return const_iterator( _data + _size );
 		}
+
+		
+		//rbegin
+		reverse_iterator rbegin() {
+			return reverse_iterator( _data + _size - 1 );
+		}
+		const_reverse_iterator rbegin() const {
+			return const_reverse_iterator( _data + _size - 1 );
+		}
+
+		//end
+		reverse_iterator rend() {
+			return reverse_iterator( _data - 1 );
+		}
+		const_reverse_iterator rend() const {
+			return const_reverse_iterator( _data - 1 );
+		}
+
 		//CAPACITY
 		//empty
 		bool empty() const {

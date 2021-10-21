@@ -69,27 +69,71 @@ int main() {
 		std::cout << (itt2 - itt) << std::endl;
 	}
 
-	{
-		std::vector<std::string> vector;
-		vector.push_back( "First to deref" );
-		vector.push_back( "Second to deref" );
-		vector.push_back( "THirrd to deref" );
-		vector.push_back( "Fourth to deref" );
-		std::vector<std::string>::iterator it = vector.begin();
-		std::vector<std::string>::iterator it2 = vector.begin() + 1;
-		std::cout << "iter - check" << std::endl;
-		std::cout << (it2 - it) << std::endl;
-	}
-
 
 
 
 	{
 		std::cout << "--------Const vector check--------" << std::endl;
 		const ft::vector<int> vec( 5, 42 );
+		ft::vector<int> vec2( 3, 43 );
 		for(ft::vector<int>::const_iterator it = vec.begin(); it != vec.end(); it = 1 + it) {
 			std::cout << *it << std::endl;
 		}
+		std::cout << static_cast<int>(vec.begin() == vec.begin()) << std::endl;
 	}
+
+
+
+
+	{
+		std::cout << "--------reverse iter check--------" << std::endl;
+
+		const ft::vector<int> vector( 5, 42 );
+
+		for(ft::vector<int>::const_reverse_iterator it = vector.rbegin(); it != vector.rend(); it++) {
+			std::cout << *it << std::endl;
+		}
+
+		std::cout << static_cast<int>(vector.rbegin() < vector.rend()) << std::endl;
+	}
+
+	{
+		std::cout << "--------reverse iter std check--------" << std::endl;
+
+		std::vector<std::string> vector;
+		vector.push_back( "First to deref" );
+		vector.push_back( "Second to deref" );
+		vector.push_back( "THirrd to deref" );
+		vector.push_back( "Fourth to deref" );
+
+		for(std::vector<std::string>::reverse_iterator it = vector.rbegin(); it != vector.rend(); it++) {
+			std::cout << *it << std::endl;
+		}
+
+		std::cout << static_cast<int>(vector.rbegin() < vector.rend()) << std::endl;
+	}
+
+	{
+
+		std::cout << "--------range constructor check--------" << std::endl;
+		std::vector<std::string> vector;
+		vector.push_back( "First to deref" );
+		vector.push_back( "Second to deref" );
+		vector.push_back( "THirrd to deref" );
+		vector.push_back( "Fourth to deref" );
+
+
+		ft::vector<std::string> vec( vector.begin(), vector.end() );
+		for(ft::vector<std::string>::iterator it = vec.begin(); it != vec.end(); it++) {
+			std::cout << *it << std::endl;
+		}
+	}
+
+
+
+
+
+
+	
 	system( "leaks containers" );
 }
