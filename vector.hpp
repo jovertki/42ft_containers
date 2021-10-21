@@ -16,9 +16,9 @@ namespace ft {
 		VectorIterator( VectorIterator const& a ) : _ptr( a._ptr ) {}
 		VectorIterator& operator=( VectorIterator const& a) {
 			if(this != &a) {
-				_ptr = a.ptr;
+				_ptr = a._ptr;
 			}
-			return (*this)
+			return (*this);
 		}
 		virtual ~VectorIterator() {}
 
@@ -106,16 +106,14 @@ namespace ft {
 
 	template <class Cont>
 	VectorIterator<Cont> operator+( const typename Cont::difference_type a, const VectorIterator<Cont> b ) {
-		VectorIterator<Cont> out( &(*b) + a );
-		return out;
+		return VectorIterator<Cont>( const_cast<typename Cont::value_type*> (&(*b) + a ));
 	}
 
 	template <class Cont>
 	VectorIterator<Cont> operator+( const VectorIterator<Cont> b, const typename Cont::difference_type a ) {
-		VectorIterator<Cont> out( &(*b) + a );
-		return out;
+		return VectorIterator<Cont>( const_cast<typename Cont::value_type*> (&(*b) + a) );
 	}
-	
+
 	template <class Cont>
 	VectorIterator<Cont> operator-( const typename Cont::difference_type a, const VectorIterator<Cont> b ) {
 		VectorIterator<Cont> out( &(*b) - a );
@@ -143,7 +141,7 @@ namespace ft {
 		typedef typename Allocator::pointer			pointer;
 		typedef typename Allocator::const_pointer 	const_pointer;
 		typedef VectorIterator< vector<T, Allocator> > iterator;
-		typedef typename std::iterator < std::random_access_iterator_tag, const value_type > const_iterator; //is it though???
+		typedef VectorIterator< const vector<T, Allocator> > const_iterator; //is it though???
 		typedef typename std::reverse_iterator<iterator> reverse_iterator;
 		typedef typename std::reverse_iterator<const_iterator> const_reverse_iterator;
 	private:

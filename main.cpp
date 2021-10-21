@@ -56,7 +56,8 @@ int main() {
 		std::cout << *vector4.begin() << std::endl;
 		ft::vector<std::string>::iterator it = vector4.begin();
 		it++;
-		it = it + 1;
+		it = 1 + it + 1;
+		
 		std::cout << *it << std::endl;
 
 
