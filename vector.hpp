@@ -5,7 +5,7 @@
 #include <iterator>
 #include "VectorIterator.hpp"
 #include "ReverseIterator.hpp"
-
+#include <iostream>
 
 namespace ft {
 	template <class T, class Allocator = std::allocator<T> >
@@ -124,7 +124,7 @@ namespace ft {
 
 		//get_allocator
 		allocator_type get_allocator() const {
-			return allocator_type();
+			return _alloc;
 		}
 
 		
@@ -236,14 +236,30 @@ namespace ft {
 			_size = 0;
 		}
 
-		// //insert
-		// //(1)
-		// iterator insert( iterator pos, const value_type& value );
-		// //(3)
-		// void insert( iterator pos, size_type count, const value_type& value );
-		// //(4)
+		//insert
+		//(1)
+		iterator insert( iterator pos, const value_type& value ) {
+			if(size() == capacity()) {
+				difference_type temp = pos - begin();
+				realloc(_capacity * 2);
+				pos = begin();
+				for(difference_type i = 0; i < temp; i++) {
+					pos++;
+				}
+			}		
+			for(iterator it = end(); &(*it) != &(*pos) && it != begin() + 1; it--) {
+				*it = *(it - 1);
+			}
+			_alloc.construct( &(*pos), value );
+			_size++;
+			return pos;
+		}
+		//(3)
+		// void insert( iterator pos, size_type count, const value_type& value ) {
+		//(4)
 		// template< class InputIt >
-		// void insert( iterator pos, InputIt first, InputIt last );
+		// void insert( iterator pos, InputIt first, InputIt last ) {
+		// }
 
 		// //erase
 		// //(1)
@@ -253,7 +269,7 @@ namespace ft {
 
 		//push_back
 		void push_back( const value_type& value ) {//NYI
-			if(_size <= _capacity) {
+			if(_size == _capacity) {
 				if(_capacity == 0)
 					_capacity = 1;
 				else

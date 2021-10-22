@@ -100,40 +100,19 @@ int main() {
 	{
 		std::cout << "--------reverse iter std check--------" << std::endl;
 
-		std::vector<std::string> vector;
+		ft::vector<std::string> vector;
 		vector.push_back( "First to deref" );
 		vector.push_back( "Second to deref" );
 		vector.push_back( "THirrd to deref" );
 		vector.push_back( "Fourth to deref" );
 
-		for(std::vector<std::string>::reverse_iterator it = vector.rbegin(); it != vector.rend(); it++) {
+		for(ft::vector<std::string>::reverse_iterator it = vector.rbegin(); it != vector.rend(); it++) {
 			std::cout << *it << std::endl;
 		}
 
 		std::cout << static_cast<int>(vector.rbegin() < vector.rend()) << std::endl;
 	}
 
-	// {
-
-	// 	std::cout << "--------range constructor check--------" << std::endl;
-	// 	std::vector<std::string> vector;
-	// 	vector.push_back( "First to deref" );
-	// 	vector.push_back( "Second to deref" );
-	// 	vector.push_back( "THirrd to deref" );
-	// 	vector.push_back( "Fourth to deref" );
-
-
-	// 	ft::vector<std::string> vec( vector.begin(), vector.end() );
-	// 	for(ft::vector<std::string>::iterator it = vec.begin(); it != vec.end(); it++) {
-	// 		std::cout << *it << std::endl;
-	// 	}
-	// }
-
-
-
-
-
-
 	
-	system( "leaks containers" );
+	// system( "leaks containers" );
 }
