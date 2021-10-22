@@ -255,11 +255,52 @@ namespace ft {
 			return pos;
 		}
 		//(3)
-		// void insert( iterator pos, size_type count, const value_type& value ) {
-		//(4)
-		// template< class InputIt >
-		// void insert( iterator pos, InputIt first, InputIt last ) {
-		// }
+		void insert( iterator pos, size_type count, const value_type& value ) {
+			if(count == 0)
+				return;
+			if(size() + count > capacity()) {
+				difference_type temp = pos - begin();
+				realloc( (size() + count) * 1.5 );
+				pos = begin();
+				for(difference_type i = 0; i < temp; i++) {
+					pos++;
+				}
+			}
+
+			for(iterator it = pos; it != end();it++) {
+				_alloc.construct( &(*(it + count)), *it );
+			}
+			_size += count;
+			for(difference_type i = 0; i < count;i++) {
+				_alloc.construct( &(*(pos + i)), value );
+			}
+			
+		}
+		// //(4)
+		template< class InputIt >
+		void insert( iterator pos, InputIt first, InputIt last ) {
+			size_type count = 0;
+			for(InputIt i = first; i != last;i++) {
+				count++;
+			}
+			if(size() + count > capacity()) {
+				difference_type temp = pos - begin();
+				realloc( (size() + count) * 1.5 );
+				pos = begin();
+				for(difference_type i = 0; i < temp; i++) {
+					pos++;
+				}
+			}
+
+			for(iterator it = pos; it != end();it++) {
+				_alloc.construct( &(*(it + count)), *it );
+			}
+			_size += count;
+			for(difference_type i = 0; i < count;i++) {
+				_alloc.construct( &(*(pos + i)), *first );
+				first++;
+			}
+		}
 
 		// //erase
 		// //(1)

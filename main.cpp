@@ -113,6 +113,81 @@ int main() {
 		std::cout << static_cast<int>(vector.rbegin() < vector.rend()) << std::endl;
 	}
 
+	// {
+
+	// 	std::cout << "--------range constructor check--------" << std::endl;
+	// 	std::vector<std::string> vector;
+	// 	vector.push_back( "First to deref" );
+	// 	vector.push_back( "Second to deref" );
+	// 	vector.push_back( "THirrd to deref" );
+	// 	vector.push_back( "Fourth to deref" );
+
+
+	// 	ft::vector<std::string> vec( vector.begin(), vector.end() );
+	// 	for(ft::vector<std::string>::iterator it = vec.begin(); it != vec.end(); it++) {
+	// 		std::cout << *it << std::endl;
+	// 	}
+	// }
+
+	{
+		std::cout << "--------insert check--------" << std::endl;
+		ft::vector<std::string> vector;
+		vector.reserve( 7 );
+		vector.push_back( "First to deref" );
+		vector.push_back( "Second to deref" );
+		vector.push_back( "THirrd to deref" );
+		vector.push_back( "Fourth to deref" );
+		std::cout << "capacity = " << vector.capacity() << std::endl;
+		ft::vector<std::string>::iterator itinsert = vector.begin();
+		itinsert += 2;
+		ft::vector<std::string>::iterator out = vector.begin();
+
+
+		
+		vector.insert( itinsert, 3, "Inserted stuff" );
+		std::cout << "capacity post insert = " << vector.capacity() << std::endl;
+		for(ft::vector<std::string>::iterator it = vector.begin(); it != vector.end(); it++) {
+			std::cout << *it << std::endl;
+		}
+	}
+	
+	{
+		std::cout << "--------insert 4 check--------" << std::endl;
+		ft::vector<std::string> vector;
+		vector.reserve( 7 );
+		vector.push_back( "First to deref" );
+		vector.push_back( "Second to deref" );
+		vector.push_back( "THirrd to deref" );
+		vector.push_back( "Fourth to deref" );
+
+		std::vector<std::string> vector2;
+		vector2.push_back( "Inserted stuff 1" );
+		vector2.push_back( "Inserted stuff 2" );
+		vector2.push_back( "Inserted stuff 3" );
+		std::cout << "vector2 =" << std::endl;
+		for(std::vector<std::string>::iterator it = vector2.begin(); it != vector2.end(); it++) {
+			std::cout << *it << std::endl;
+		}
+
+
+		
+
+		std::cout << "capacity = " << vector.capacity() << std::endl;
+		ft::vector<std::string>::iterator itinsert = vector.begin();
+		itinsert += 2;
+
+		vector.insert( itinsert, vector2.begin(), vector2.end() );
+		std::cout << "capacity post insert = " << vector.capacity() << std::endl;
+		for(ft::vector<std::string>::iterator it = vector.begin(); it != vector.end(); it++) {
+			std::cout << *it << std::endl;
+		}
+	}
+
+
+
+	
+
+
 	
 	// system( "leaks containers" );
 }
