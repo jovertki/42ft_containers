@@ -181,6 +181,41 @@ int main() {
 		for(ft::vector<std::string>::iterator it = vector.begin(); it != vector.end(); it++) {
 			std::cout << *it << std::endl;
 		}
+		vector.erase( vector.begin() + 2 );
+		std::cout << "element erased" << vector.capacity() << std::endl;
+		for(ft::vector<std::string>::iterator it = vector.begin(); it != vector.end(); it++) {
+			std::cout << *it << std::endl;
+		}
+
+		vector.erase( vector.begin(), vector.begin() + 2 );
+		std::cout << "multiple elements erased, new size" << vector.size() << std::endl;
+		for(ft::vector<std::string>::iterator it = vector.begin(); it != vector.end(); it++) {
+			std::cout << *it << std::endl;
+		}
+
+		std::cout << "swap vectors ---------------" << std::endl;
+
+
+
+
+		ft::vector<std::string> vector3;
+		vector3.push_back( "vector 3 1" );
+		vector3.push_back( "vector 3 2" );
+		vector3.push_back( "vector 3 3" );
+		swap( vector, vector3 );
+		std::cout << "first vector:" << std::endl;
+		for(ft::vector<std::string>::iterator it = vector.begin(); it != vector.end(); it++) {
+			std::cout << *it << std::endl;
+		}
+
+
+		std::cout << "second vector:" << std::endl;
+		for(ft::vector<std::string>::iterator it = vector3.begin(); it != vector3.end(); it++) {
+			std::cout << *it << std::endl;
+		}
+
+
+		
 	}
 
 

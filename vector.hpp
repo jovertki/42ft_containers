@@ -6,6 +6,7 @@
 #include "VectorIterator.hpp"
 #include "ReverseIterator.hpp"
 #include <iostream>
+#include <vector>
 
 namespace ft {
 	template <class T, class Allocator = std::allocator<T> >
@@ -302,11 +303,31 @@ namespace ft {
 			}
 		}
 
-		// //erase
-		// //(1)
-		// iterator erase( iterator pos );
-		// //(2)
-		// iterator erase( iterator first, iterator last );
+		//erase
+		//(1)
+		iterator erase( iterator pos ) {
+			_alloc.destroy( &(*pos) );
+			for(iterator it = pos; it != end() - 1; it++) {
+				_alloc.construct( &(*it), *(it + 1) );
+			}
+			_size--;
+			return pos;
+		}
+		//(2)
+		iterator erase( iterator first, iterator last ) {
+			difference_type temp = last - first;
+			iterator out = first;
+			for(iterator it = first; it != last; it++) {
+				_alloc.destroy( &(*it) );
+			}
+			
+			for(iterator it = last; it != end(); it++) {
+				_alloc.construct( &(*first), *it );
+				first++;
+			}
+			_size -= temp;
+			return out;
+		}
 
 		//push_back
 		void push_back( const value_type& value ) {//NYI
@@ -323,7 +344,7 @@ namespace ft {
 
 		//pop_back
 		void pop_back() {
-			//call erase
+			erase( end() - 1 );
 		}
 
 		//resize
@@ -355,7 +376,28 @@ namespace ft {
 		}
 
 		//swap
-		void swap( vector& other );
+		void swap( vector& other ) {
+			allocator_type _alloc_buf = _alloc;
+			size_type _size_buf = _size;
+			size_type _capacity_buf = _capacity;
+			value_type* _data_buf = _data;
+
+			_alloc = other._alloc;
+			_size = other._size;
+			_capacity = other._capacity;
+			_data = other._data;
+			
+			other._alloc = _alloc_buf;
+			other._size = _size_buf;
+			other._capacity = _capacity_buf;
+			other._data = _data_buf;
+		}
 
 	};
+
+	template <class T, class Alloc>
+	void swap( ft::vector<T, Alloc> &a, ft::vector<T, Alloc> &b ) {
+		a.swap( b );
+	}
 }
+
