@@ -32,17 +32,25 @@ namespace ft {
 		value_type* _data;
 
 		void realloc( size_type newCapacity ) {
-			value_type* new_data = _alloc.allocate( newCapacity );
-
+			value_type* new_data = nullptr;
+			try {
+				new_data = _alloc.allocate( newCapacity );
+			}
+			catch(std::exception& e) {
+				_alloc.dellocate( new_data, newCapacity );
+				return;
+			}
+			size_type new_size = _size;
 			if(newCapacity < _size)
-				_size = newCapacity;
-			for(size_type i = 0; i < _size; i++) {
+				new_size = newCapacity;
+			for(size_type i = 0; i < new_size; i++) {
 				_alloc.construct( &new_data[i], _data[i] );
 				_alloc.destroy( &_data[i] );
 			}
 			_alloc.deallocate( _data, _capacity );
 			_data = new_data;
 			_capacity = newCapacity;
+			_size = new_size;
 		}
 	public:
 		//BASE MEMBERS
@@ -251,6 +259,8 @@ namespace ft {
 		//insert
 		//(1)
 		iterator insert( iterator pos, const value_type& value ) {
+			if(pos == end())
+				return pos;
 			if(size() == capacity()) {
 				difference_type temp = pos - begin();
 				realloc(_capacity * 2);
@@ -341,7 +351,7 @@ namespace ft {
 		}
 
 		//push_back
-		void push_back( const value_type& value ) {//NYI
+		void push_back( const value_type& value ) {
 			if(_size == _capacity) {
 				if(_capacity == 0)
 					_capacity = 1;
@@ -354,12 +364,7 @@ namespace ft {
 					return;
 				}
 			}
-			try {
-				_alloc.construct( &_data[_size], value );
-			}
-			catch(std::exception& e) {
-				return;// ?????????????
-			}
+			_alloc.construct( &_data[_size], value );
 			_size++;
 		}
 
