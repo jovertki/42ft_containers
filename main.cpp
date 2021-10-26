@@ -215,7 +215,7 @@ int main() {
 		}
 
 
-		
+
 	}
 
 
@@ -223,6 +223,10 @@ int main() {
 	
 
 
-	
+	{
+		ft::vector<int> asd;
+		asd.push_back( 2 );
+		asd.at( 3 );
+	}
 	// system( "leaks containers" );
 }

@@ -7,6 +7,7 @@
 #include "ReverseIterator.hpp"
 #include <iostream>
 #include <vector>
+#include <sstream>
 
 namespace ft {
 	template <class T, class Allocator = std::allocator<T> >
@@ -132,9 +133,19 @@ namespace ft {
 		//ELEMENT ACCESS
 		//at
 		reference at( size_type pos ) {
+			if(!(pos < size())) {
+				std::stringstream ss;
+				ss << "pos (which is " << pos << ") >= this->size() (which is " << size() << ")" << std::endl;
+				throw (std::out_of_range( ss.str() ));
+			}
 			return _data[pos];
 		}
-		const_reference at( size_type pos ) const{
+		const_reference at( size_type pos ) const {
+			if(!(pos < size())) {
+				std::stringstream ss;
+				ss << "pos (which is " << pos << ") >= this->size() (which is " << size() << ")" << std::endl;
+				throw (std::out_of_range( ss.str() ));
+			}
 			return _data[pos];
 		}
 		
@@ -336,9 +347,19 @@ namespace ft {
 					_capacity = 1;
 				else
 					_capacity = _capacity * 2;
-				realloc( _capacity );
+				try {
+					realloc( _capacity );
+				}
+				catch(std::exception& e) {
+					return;
+				}
 			}
-			_alloc.construct(&_data[_size], value);
+			try {
+				_alloc.construct( &_data[_size], value );
+			}
+			catch(std::exception& e) {
+				return;// ?????????????
+			}
 			_size++;
 		}
 
