@@ -3,7 +3,7 @@ SRC		= $(wildcard *.cpp)
 HDR		= $(wildcard *.hpp)
 OBJ		= $(patsubst %.cpp, obj/%.o,$(SRC))
 DEP		= $(patsubst %.o, %.d,$(OBJ))
-#CFLAGS	= -Wall -Werror -Wextra -Wshadow -Wno-shadow -std=c++98
+CFLAGS	= -Wall -Werror -Wextra -Wshadow -Wno-shadow -std=c++98
 CC		= clang++
 
 CFLAGS	= -g -std=c++98

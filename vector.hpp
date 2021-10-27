@@ -8,7 +8,8 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-
+#include "meta_functions.hpp"
+#include "utils.hpp"
 namespace ft {
 	template <class T, class Allocator = std::allocator<T> >
 	class vector {
@@ -70,16 +71,16 @@ namespace ft {
 			_capacity = n;
 		}
 
-		// //range constructor
-		// template <class InputIterator>
-		// vector( InputIterator first, InputIterator last,
-		// 	const allocator_type& alloc = allocator_type() ) : _alloc( alloc ), _size( last - first ), _capacity( last - first ), _data( _alloc.allocate( last - first ) ) {
-		// 	size_type i = 0;
-		// 	for(; first < last; first++) {
-		// 		alloc.construct( &_data[i], *first );
-		// 		i++;
-		// 	}
-		// }
+		//range constructor
+		template <class InputIterator>
+		vector( InputIterator first, InputIterator last,
+			const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, char>::type* = nullptr ) : _alloc( alloc ), _size( ft::distance( first, last ) ), _capacity( _size ), _data( _alloc.allocate( _size ) ) {
+			size_type i = 0;
+			for(; first < last; first++) {
+				_alloc.construct( &_data[i], *first);
+				i++;
+			}
+		}
 
 		//copy constructor
 		vector( const vector& x ) :
@@ -235,6 +236,11 @@ namespace ft {
 			return _size;
 		}
 
+		//max_size
+		size_type max_size() const {
+			return _alloc.max_size();
+		}
+
 		//reserve
 		void reserve( size_type new_cap ) {
 			if(new_cap > capacity()) {
@@ -336,7 +342,7 @@ namespace ft {
 		}
 		//(2)
 		iterator erase( iterator first, iterator last ) {
-			difference_type temp = last - first;
+			difference_type temp = ft::distance(first, last);
 			iterator out = first;
 			for(iterator it = first; it != last; it++) {
 				_alloc.destroy( &(*it) );

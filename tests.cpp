@@ -1,18 +1,9 @@
 
 
-// template <class Value>
-// class  Vec {
-// 	typedef Value value_type;
-// 	value_type val;
-// };
 
+// #include "meta_functions.hpp"
+// #include <iostream>
 
-// template <class Cont>
-// class Iterator {
-// 	typename Cont::value_type* ptr;
-// };
-
-// template <class Cont, class Iter>
-// Iter operator+( const typename Cont::difference_type& a, const Iter& b ) {
-// 	return static_cast<typename Cont::difference_type>(&(*a) - &(*b));
+// int main() {
+// 	std::cout << ft::is_integral<int>::value << std::endl;
 // }

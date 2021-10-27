@@ -231,5 +231,20 @@ int main() {
 	catch(std::exception& e) {
 		std::cout << e.what() << std::endl;
 	}
-// system( "leaks containers" );
+	
+
+
+	std::vector<int> vecint;
+	vecint.push_back( 1 );
+	vecint.push_back( 2 );
+	vecint.push_back( 42 );
+	vecint.push_back( 21 );
+	
+	ft::vector<int> ints( vecint.begin(), vecint.end() );
+	for(ft::vector<int>::iterator it = ints.begin(); it != ints.end(); it++) {
+		std::cout << *it << std::endl;
+	}
+
+	std::cout << "max size is " << ints.max_size() << std::endl;
+	// system( "leaks containers" );
 }
