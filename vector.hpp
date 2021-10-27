@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <iterator>
 #include "VectorIterator.hpp"
-#include "ReverseIterator.hpp"
+#include "reverse_iterator.hpp"
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -21,10 +21,10 @@ namespace ft {
 		typedef const value_type& 					const_reference;
 		typedef typename Allocator::pointer			pointer;
 		typedef typename Allocator::const_pointer 	const_pointer;
-		typedef VectorIterator<value_type> iterator;
-		typedef VectorIterator< const value_type> const_iterator; //is it though???
-		typedef ReverseIterator<iterator> reverse_iterator;
-		typedef ReverseIterator<const_iterator> const_reverse_iterator;
+		typedef ft::VectorIterator<value_type> iterator;
+		typedef ft::VectorIterator< const value_type> const_iterator; //is it though???
+		typedef typename ft::reverse_iterator<iterator> reverse_iterator;
+		typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 	private:
 		allocator_type _alloc;
 		size_type _size;
@@ -37,7 +37,7 @@ namespace ft {
 				new_data = _alloc.allocate( newCapacity );
 			}
 			catch(std::exception& e) {
-				_alloc.dellocate( new_data, newCapacity );
+				_alloc.deallocate( new_data, newCapacity );
 				return;
 			}
 			size_type new_size = _size;

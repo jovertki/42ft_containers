@@ -1,11 +1,21 @@
 #pragma once
+#include "iterator_traits.hpp"
+
 namespace ft {
 	template <class T>
-	class VectorIterator {
+	class VectorIterator : public iterator<random_access_iterator_tag, T>{
 	public:
-		typedef T value_type;
-		typedef std::ptrdiff_t diff_type;
-		typedef std::size_t	 size_type;
+		typedef typename iterator<random_access_iterator_tag, T>::iterator_category
+			iterator_category;
+		typedef typename iterator<random_access_iterator_tag, T>::value_type
+			value_type;
+		typedef typename iterator<random_access_iterator_tag, T>::difference_type
+			diff_type;
+		typedef typename iterator<random_access_iterator_tag, T>::pointer
+			pointer;
+		typedef typename iterator<random_access_iterator_tag, T>::reference
+			reference;
+		typedef std::size_t size_type;
 	private:
 		value_type* _ptr;
 	public:
@@ -43,18 +53,18 @@ namespace ft {
 			return iterator;
 		}
 
-		VectorIterator operator+=( diff_type a ) {
+		VectorIterator operator+=( const diff_type &a ) {
 			_ptr += a;
 			return *this;
 		}
-		VectorIterator operator-=( diff_type a ) {
+		VectorIterator operator-=( const diff_type& a ) {
 			_ptr -= a;
 			return *this;
 		}
 		VectorIterator* operator->() const {
 			return _ptr;
 		}
-		VectorIterator& operator[]( size_type index ) const {
+		VectorIterator& operator[]( const diff_type& index ) const {
 			return *(_ptr + index);
 		}
 

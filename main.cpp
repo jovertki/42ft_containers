@@ -222,11 +222,14 @@ int main() {
 
 	
 
-
+	try
 	{
 		ft::vector<int> asd;
 		asd.push_back( 2 );
 		asd.at( 3 );
 	}
-	// system( "leaks containers" );
+	catch(std::exception& e) {
+		std::cout << e.what() << std::endl;
+	}
+// system( "leaks containers" );
 }
