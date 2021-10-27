@@ -246,5 +246,38 @@ int main() {
 	}
 
 	std::cout << "max size is " << ints.max_size() << std::endl;
+
+
+
+
+
+
+	{
+		ft::vector<int> lol;
+		lol.push_back( 1 );
+		lol.push_back( 2 );
+		lol.push_back( 3 );
+
+		ft::vector<int> kek;
+		kek.push_back( 1 );
+		kek.push_back( 2 );
+		kek.push_back( 3 );
+
+		std::cout << "lol = kek is " << (lol > kek) << std::endl;
+	}
+	{
+		std::vector<int> lol;
+		lol.push_back( 1 );
+		lol.push_back( 2 );
+		lol.push_back( 3 );
+
+		std::vector<int> kek;
+		kek.push_back( 1 );
+		kek.push_back( 2 );
+		kek.push_back( 3 );
+
+
+		std::cout << "lol = kek is " << (lol > kek) << std::endl;
+	}
 	// system( "leaks containers" );
 }

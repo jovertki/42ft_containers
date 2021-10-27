@@ -427,8 +427,50 @@ namespace ft {
 
 	};
 
+	//compare
+	//==
+	template< class T, class Alloc >
+	bool operator==( const ft::vector<T, Alloc>& lhs,
+		const ft::vector<T, Alloc>& rhs ) {
+		return ft::equal( lhs.begin(), lhs.end(), rhs.begin() );
+	}
+	//!=
+	template< class T, class Alloc >
+	bool operator!=( const ft::vector<T, Alloc>& lhs,
+		const ft::vector<T, Alloc>& rhs ){
+		return !ft::operator==( lhs, rhs );
+	}
+	//<
+	template< class T, class Alloc >
+	bool operator<( const ft::vector<T, Alloc>& lhs,
+		const ft::vector<T, Alloc>& rhs ){
+		return ft::lexicographical_compare( lhs.begin(), lhs.end(), rhs.begin(), rhs.end() ) && ft::operator!=(lhs, rhs);
+	}
+	//<=
+	template< class T, class Alloc >
+	bool operator<=( const ft::vector<T, Alloc>& lhs,
+		const ft::vector<T, Alloc>& rhs ){
+		return ft::lexicographical_compare( lhs.begin(), lhs.end(), rhs.begin(), rhs.end() ) || \
+			ft::equal( lhs.begin(), lhs.end(), rhs.begin() );
+	}
+	//>
+	template< class T, class Alloc >
+	bool operator>( const ft::vector<T, Alloc>& lhs,
+		const ft::vector<T, Alloc>& rhs ){
+		return !ft::lexicographical_compare( lhs.begin(), lhs.end(), rhs.begin(), rhs.end() ) && ft::operator!=( lhs, rhs );
+		}
+	//>=
+	template< class T, class Alloc >
+	bool operator>=( const ft::vector<T, Alloc>& lhs,
+		const ft::vector<T, Alloc>& rhs ){
+		return !ft::lexicographical_compare( lhs.begin(), lhs.end(), rhs.begin(), rhs.end() ) || \
+			ft::equal( lhs.begin(), lhs.end(), rhs.begin() );
+		}
+
+	
+	//ft::swap
 	template <class T, class Alloc>
-	void swap( ft::vector<T, Alloc> &a, ft::vector<T, Alloc> &b ) {
+	void swap( ft::vector<T, Alloc>& a, ft::vector<T, Alloc>& b ) {
 		a.swap( b );
 	}
 }
