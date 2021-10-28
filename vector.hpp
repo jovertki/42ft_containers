@@ -10,6 +10,8 @@
 #include <sstream>
 #include "meta_functions.hpp"
 #include "utils.hpp"
+#include <cstddef>
+
 namespace ft {
 	template <class T, class Allocator = std::allocator<T> >
 	class vector {
@@ -33,7 +35,7 @@ namespace ft {
 		value_type* _data;
 
 		void realloc( size_type newCapacity ) {
-			value_type* new_data = nullptr;
+			value_type* new_data = 0;//NULL
 			try {
 				new_data = _alloc.allocate( newCapacity );
 			}
@@ -74,9 +76,9 @@ namespace ft {
 		//range constructor
 		template <class InputIterator>
 		vector( InputIterator first, InputIterator last,
-			const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, char>::type* = nullptr ) : _alloc( alloc ), _size( ft::distance( first, last ) ), _capacity( _size ), _data( _alloc.allocate( _size ) ) {
+			const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, char>::type* = 0/*NULL*/ ) : _alloc( alloc ), _size( ft::distance( first, last ) ), _capacity( _size ), _data( _alloc.allocate( _size ) ) {
 			size_type i = 0;
-			for(; first < last; first++) {
+			for(; first != last; first++) {
 				_alloc.construct( &_data[i], *first);
 				i++;
 			}
@@ -228,7 +230,7 @@ namespace ft {
 		//CAPACITY
 		//empty
 		bool empty() const {
-			begin() == end();
+			return begin() == end();
 		}
 
 		//size
@@ -275,7 +277,7 @@ namespace ft {
 					pos++;
 				}
 			}		
-			for(iterator it = end(); &(*it) != &(*pos) && it != begin() + 1; it--) {
+			for(iterator it = end(); &(*it) != &(*pos) && it != begin(); it--) {
 				*it = *(it - 1);
 			}
 			_alloc.construct( &(*pos), value );
@@ -380,19 +382,6 @@ namespace ft {
 		}
 
 		//resize
-		//(1)
-		void resize( size_type count ) {
-			if(size() < count) {
-				realloc( count );
-				for(size_type i = size(); i < count; i++) {
-					_alloc.construct( &_data[i], value_type() );
-					_size = count;
-				}
-			}
-			else {
-				realloc( count );
-			}
-		}
 		//(2)
 		void resize( size_type count, value_type value = value_type() ) {
 			if(size() < count) {
