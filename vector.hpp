@@ -126,7 +126,7 @@ namespace ft {
 		}
 		// //(2)
 		template< class InputIt >
-		void assign( InputIt first, InputIt last ) {
+		void assign( InputIt first, InputIt last, typename ft::enable_if<!ft::is_integral<InputIt>::value, char>::type* = 0/*NULL*/ ) {
 			clear();
 			while(first != last) {
 				push_back( *first );
@@ -267,7 +267,7 @@ namespace ft {
 		//insert
 		//(1)
 		iterator insert( iterator pos, const value_type& value ) {
-			if(pos == end())
+			if(pos > end())
 				return pos;
 			if(size() == capacity()) {
 				difference_type temp = pos - begin();
@@ -301,18 +301,17 @@ namespace ft {
 				_alloc.construct( &(*(it + count)), *it );
 			}
 			_size += count;
-			for(difference_type i = 0; i < count;i++) {
+			for(size_type i = 0; i < count;i++) {
 				_alloc.construct( &(*(pos + i)), value );
 			}
 			
 		}
 		// //(4)
 		template< class InputIt >
-		void insert( iterator pos, InputIt first, InputIt last ) {
-			size_type count = 0;
-			for(InputIt i = first; i != last;i++) {
-				count++;
-			}
+		void insert( iterator pos, InputIt first, InputIt last, typename ft::enable_if<!ft::is_integral<InputIt>::value, char>::type* = 0/*NULL*/ ) {
+			difference_type count = ft::distance( first, last );
+			if(count == 0)
+				return;
 			if(size() + count > capacity()) {
 				difference_type temp = pos - begin();
 				realloc( (size() + count) * 1.5 );
@@ -322,7 +321,7 @@ namespace ft {
 				}
 			}
 
-			for(iterator it = pos; it != end();it++) {
+			for(iterator it = end() - 1; it != pos - 1;it--) {
 				_alloc.construct( &(*(it + count)), *it );
 			}
 			_size += count;

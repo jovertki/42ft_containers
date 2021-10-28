@@ -346,7 +346,7 @@ int main() {
 		vector2.push_back( "BB" );
 		vector2.push_back( "CCC" );
 		vector2.insert( vector2.begin(), "LOLKEKW" );
-		if(vector == vector2) {
+		if(vector == vector2 && vector.size() == vector2.size()) {
 			GOOD;
 		}
 		else {
@@ -364,7 +364,7 @@ int main() {
 		vector4.push_back( "BB" );
 		vector4.push_back( "CCC" );
 		vector4.insert( vector4.end(), "LOLKEKW" );
-		if(vector3 == vector4) {
+		if(vector3 == vector4 && vector3.size() == vector4.size()) {
 			GOOD;
 		}
 		else {
@@ -382,7 +382,7 @@ int main() {
 		vector6.push_back( "BB" );
 		vector6.push_back( "CCC" );
 		vector6.insert( vector6.begin() + 2, "LOLKEKW" );
-		if(vector5 == vector6) {
+		if(vector5 == vector6 && vector5.size() == vector6.size()) {
 			GOOD;
 		}
 		else {
@@ -403,7 +403,7 @@ int main() {
 		vector2.push_back( "BB" );
 		vector2.push_back( "CCC" );
 		vector2.insert( vector2.begin(), 4, "LOLKEKW" );
-		if(vector == vector2) {
+		if(vector == vector2 && vector.size() == vector2.size()) {
 			GOOD;
 		}
 		else {
@@ -421,7 +421,7 @@ int main() {
 		vector4.push_back( "BB" );
 		vector4.push_back( "CCC" );
 		vector4.insert( vector4.end(), 4, "LOLKEKW" );
-		if(vector3 == vector4) {
+		if(vector3 == vector4 && vector3.size() == vector4.size()) {
 			GOOD;
 		}
 		else {
@@ -439,7 +439,7 @@ int main() {
 		vector6.push_back( "BB" );
 		vector6.push_back( "CCC" );
 		vector6.insert( vector6.begin() + 2, 4, "LOLKEKW" );
-		if(vector5 == vector6) {
+		if(vector5 == vector6 && vector5.size() == vector6.size()) {
 			GOOD;
 		}
 		else {
@@ -455,16 +455,18 @@ int main() {
 		list.push_back( "CCC" );
 		//insert in begin
 		ft::vector<std::string> vector;
-		vector.push_back( "A" );
-		vector.push_back( "BB" );
-		vector.push_back( "CCC" );
+		vector.push_back( "first" );
+		vector.push_back( "second" );
+		vector.push_back( "third" );
+		vector.push_back( "fourth" );
 		vector.insert( vector.begin(), list.begin(), list.end() );
 		std::vector<std::string> vector2;
-		vector2.push_back( "A" );
-		vector2.push_back( "BB" );
-		vector2.push_back( "CCC" );
+		vector2.push_back( "first" );
+		vector2.push_back( "second" );
+		vector2.push_back( "third" );
+		vector2.push_back( "fourth" );
 		vector2.insert( vector2.begin(), list.begin(), list.end() );
-		if(vector == vector2) {
+		if(vector == vector2 && vector.size() == vector2.size()) {
 			GOOD;
 		}
 		else {
@@ -500,7 +502,7 @@ int main() {
 		vector6.push_back( "BB" );
 		vector6.push_back( "CCC" );
 		vector6.insert( vector6.begin() + 2, list.begin(), list.end() );
-		if(vector5 == vector6) {
+		if(vector5 == vector6 && vector5.size() == vector6.size()) {
 			GOOD;
 		}
 		else {

@@ -19,7 +19,7 @@ namespace ft {
 	private:
 		value_type* _ptr;
 	public:
-		VectorIterator( value_type* ptr ) : _ptr( ptr ) {}
+		VectorIterator( value_type* ptr = 0 /*NULL*/) : _ptr( ptr ) {}
 		VectorIterator( VectorIterator const& a ) : _ptr( a._ptr ) {}
 		VectorIterator& operator=( VectorIterator const& a ) {
 			if(this != &a) {
@@ -61,13 +61,15 @@ namespace ft {
 			_ptr -= a;
 			return *this;
 		}
-		VectorIterator* operator->() const {
+		pointer operator->() const {
 			return _ptr;
 		}
-		VectorIterator& operator[]( const diff_type& index ) const {
+		reference operator[]( const diff_type& index ) const {
 			return *(_ptr + index);
 		}
-
+		operator ft::VectorIterator<const value_type>() const {
+			return VectorIterator<const value_type>(_ptr);
+		}
 	};
 
 
@@ -157,4 +159,8 @@ namespace ft {
 		return VectorIterator<T>( const_cast<T*> (&(*b) - a) );
 	}
 
+	template <class T1, class T2>
+	typename VectorIterator<T1>::diff_type operator-( const VectorIterator<T1>& a, const VectorIterator<T2>& b ) {
+		return &(*a) - &(*b);
+	}
 }
