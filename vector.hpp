@@ -25,7 +25,7 @@ namespace ft {
 		typedef typename Allocator::pointer			pointer;
 		typedef typename Allocator::const_pointer 	const_pointer;
 		typedef ft::VectorIterator<value_type> iterator;
-		typedef ft::VectorIterator< const value_type> const_iterator; //is it though???
+		typedef ft::VectorIterator< const value_type> const_iterator;
 		typedef typename ft::reverse_iterator<iterator> reverse_iterator;
 		typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 	private:
@@ -213,18 +213,18 @@ namespace ft {
 		
 		//rbegin
 		reverse_iterator rbegin() {
-			return reverse_iterator( _data + _size - 1 );
+			return reverse_iterator( end() );
 		}
 		const_reverse_iterator rbegin() const {
-			return const_reverse_iterator( _data + _size - 1 );
+			return const_reverse_iterator( end());
 		}
 
 		//end
 		reverse_iterator rend() {
-			return reverse_iterator( _data - 1 );
+			return reverse_iterator( begin());
 		}
 		const_reverse_iterator rend() const {
-			return const_reverse_iterator( _data - 1 );
+			return const_reverse_iterator( begin() );
 		}
 
 		//CAPACITY
@@ -420,13 +420,13 @@ namespace ft {
 	template< class T, class Alloc >
 	bool operator==( const ft::vector<T, Alloc>& lhs,
 		const ft::vector<T, Alloc>& rhs ) {
-		return ft::equal( lhs.begin(), lhs.end(), rhs.begin() );
+		return ft::equal( lhs.begin(), lhs.end(), rhs.begin() ) && ft::equal( rhs.begin(), rhs.end(), lhs.begin() );
 	}
 	//!=
 	template< class T, class Alloc >
 	bool operator!=( const ft::vector<T, Alloc>& lhs,
 		const ft::vector<T, Alloc>& rhs ){
-		return !ft::operator==( lhs, rhs );
+		return !operator==(lhs, rhs);
 	}
 	//<
 	template< class T, class Alloc >
@@ -452,7 +452,7 @@ namespace ft {
 	bool operator>=( const ft::vector<T, Alloc>& lhs,
 		const ft::vector<T, Alloc>& rhs ){
 		return !ft::lexicographical_compare( lhs.begin(), lhs.end(), rhs.begin(), rhs.end() ) || \
-			ft::equal( lhs.begin(), lhs.end(), rhs.begin() );
+			operator==(lhs, rhs);
 		}
 
 	
