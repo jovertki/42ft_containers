@@ -224,7 +224,7 @@ namespace ft {
 			return reverse_iterator( begin());
 		}
 		const_reverse_iterator rend() const {
-			return const_reverse_iterator( begin() );
+			return const_reverse_iterator( begin());
 		}
 
 		//CAPACITY
