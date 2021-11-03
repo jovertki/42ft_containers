@@ -8,6 +8,14 @@
 #include <list>
 
 
+
+//map
+#include "map.hpp"
+
+
+
+
+
 #define GOOD std::cout << "\033[1;32mGOOD\033[0m\n";
 #define BAD std::cout << "\033[1;31mBAD\033[0m\n";
 
@@ -1074,5 +1082,19 @@ int main() {
 
 		std::cout << "the stuff = " << *(it) << std::endl;
 	}
-	
+
+
+
+
+
+
+
+	ft::map<int, int> mymap;
+	mymap.insert( ft::make_pair( 0, 111 ) );
+	mymap.insert( ft::make_pair( 1, 222 ) );
+	mymap.insert( ft::make_pair( 2, 333 ) );
+
+	std::cout << mymap[0] << std::endl;
+	std::cout << mymap[1] << std::endl;
+	std::cout << mymap[2] << std::endl;
 }

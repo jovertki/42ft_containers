@@ -2,15 +2,12 @@
 
 #include <memory>
 #include <cstddef>
-#include <iterator>
 #include "VectorIterator.hpp"
 #include "reverse_iterator.hpp"
 #include <iostream>
-#include <vector>
 #include <sstream>
 #include "meta_functions.hpp"
 #include "utils.hpp"
-#include <cstddef>
 
 namespace ft {
 	template <class T, class Allocator = std::allocator<T> >

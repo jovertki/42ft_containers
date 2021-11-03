@@ -1,6 +1,6 @@
 #pragma once
 #include "iterator_traits.hpp"
-
+#include <exception>
 namespace ft {
 	template<class Iter>
 	typename ft::iterator_traits<Iter>::difference_type distance( Iter begin, Iter end ) {
@@ -67,6 +67,96 @@ namespace ft {
 	}
 
 
+	//isConst
+	template <typename T> bool isConst( T& x )
+	{
+		return false;
+	}
 
+	template <typename T> bool isConst( T const& x )
+	{
+		return true;
+	}
+
+
+	//Pair
+	template<
+		class T1,
+		class T2
+	> struct pair {
+
+	public:
+		typedef T1 first_type;
+		typedef T2 second_type;
+		first_type first;
+		second_type second;
+		pair() : first(T1()), second(T2()){//(1)
+
+		}
+		pair( const T1& x, const T2& y ) : first( x ), second( y ) {}//(2)
+
+		template< class U1, class U2 >//(4)
+		pair( const pair<U1, U2>& p ) : first( p.first ), second( p.second ) {}
+		
+		pair& operator=( const pair& other ) {
+			if(this != &other) {
+				if (!isConst(first))
+					first = other.first;
+				if(!isConst( second ))
+					second = other.second;
+			}
+			return *this;
+		}
+
+	};
 	
+	template< class T1, class T2 >
+	ft::pair<T1, T2> make_pair( T1 t, T2 u ) {
+		return ft::pair<T1, T2>( t, u );
+	}
+
+	template< class T1, class T2 >
+	bool operator==( const ft::pair<T1, T2>& lhs, const ft::pair<T1, T2>& rhs ) {
+		if(lhs.first == rhs.first && lhs.second == rhs.second)
+			return true;
+		return false;
+	}
+
+	template< class T1, class T2 >
+	bool operator!=( const ft::pair<T1, T2>& lhs, const ft::pair<T1, T2>& rhs ) {
+		if(lhs.first != rhs.first && lhs.second != rhs.second)
+			return true;
+		return false;
+	}
+
+	template< class T1, class T2 >
+	bool operator>( const ft::pair<T1, T2>& lhs, const ft::pair<T1, T2>& rhs ) {
+		if(lhs.first > rhs.first && lhs.second > rhs.second)
+			return true;
+		return false;
+	}
+
+	template< class T1, class T2 >
+	bool operator>=( const ft::pair<T1, T2>& lhs, const ft::pair<T1, T2>& rhs ) {
+		if(lhs.first >= rhs.first && lhs.second >= rhs.second)
+			return true;
+		return false;
+	}
+
+	template< class T1, class T2 >
+	bool operator<( const ft::pair<T1, T2>& lhs, const ft::pair<T1, T2>& rhs ) {
+		if(lhs.first < rhs.first && lhs.second < rhs.second)
+			return true;
+		return false;
+	}
+	
+	template< class T1, class T2 >
+	bool operator<=( const ft::pair<T1, T2>& lhs, const ft::pair<T1, T2>& rhs ) {
+		if(lhs.first <= rhs.first && lhs.second <= rhs.second)
+			return true;
+		return false;
+	}
+
+
+
 }
