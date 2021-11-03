@@ -11,7 +11,7 @@
 
 //map
 #include "map.hpp"
-
+#include <map>
 
 
 
@@ -1088,13 +1088,48 @@ int main() {
 
 
 
-
+	std::cout << "my map test---------------------" << std::endl;
 	ft::map<int, int> mymap;
-	mymap.insert( ft::make_pair( 0, 111 ) );
-	mymap.insert( ft::make_pair( 1, 222 ) );
-	mymap.insert( ft::make_pair( 2, 333 ) );
+	mymap.insert( ft::make_pair( 30, 30 ) );
+	mymap.insert( ft::make_pair(20, 20 ) );
+	mymap.insert( ft::make_pair( 50, 50 ) );
+	mymap.insert( ft::make_pair( 15, 15 ) );
+	mymap.insert( ft::make_pair( 25, 25 ) );
+	mymap.insert( ft::make_pair( 40, 40 ) );
+	mymap.insert( ft::make_pair( 35, 35 ) );
+	mymap.insert( ft::make_pair( 45, 45 ) );
+	mymap.insert( ft::make_pair( 55, 55 ) );
+	std::cout << "the tree is built" << std::endl;
 
-	std::cout << mymap[0] << std::endl;
-	std::cout << mymap[1] << std::endl;
-	std::cout << mymap[2] << std::endl;
+	
+	ft::map<int, int>::iterator it = mymap.begin();
+	// std::cout << "begin is " << it->second << std::endl;
+	// std::cout << "next to begin is " << (++it)->second << std::endl;
+
+	std::cout << "full tree:" << std::endl;
+	for(ft::map<int, int>::iterator itt = --(mymap.end()); itt != --mymap.begin(); itt--) {
+
+		std::cout << itt->second << std::endl;
+	}
+
+	std::cout << "std map test---------------------" << std::endl;
+
+	std::map<int, int> map;
+	map.insert( std::make_pair( 30, 30 ) );
+	map.insert( std::make_pair( 20, 20 ) );
+	map.insert( std::make_pair( 50, 50 ) );
+	map.insert( std::make_pair( 15, 15 ) );
+	map.insert( std::make_pair( 25, 25 ) );
+	map.insert( std::make_pair( 40, 40 ) );
+	map.insert( std::make_pair( 35, 35 ) );
+	map.insert( std::make_pair( 45, 45 ) );
+	map.insert( std::make_pair( 55, 55 ) );
+
+	std::map<int, int>::iterator its = map.begin();
+
+	its--;
+	
+	std::cout << "begin is " << map.begin()->second << std::endl;
+	std::cout << "next to begin is " << (++map.begin())->second << std::endl;
+
 }

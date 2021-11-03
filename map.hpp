@@ -9,79 +9,104 @@
 #include "meta_functions.hpp"
 #include "utils.hpp"
 
+
+
+
 namespace ft {
 	template<
 		class Key,
 		class T,
 		class Compare = std::less<Key>,
 		class Allocator = std::allocator<std::pair<const Key, T> >
+	> class map;
+}
+#include "MapIterator.hpp"
+
+
+namespace ft {
+	template<
+		class Key,
+		class T,
+		class Compare,
+		class Allocator
 	> class map {
 	public:
 		typedef Key key_type;
 		typedef T mapped_type;
 		typedef ft::pair<const Key, T> value_type;
+		typedef Compare key_compare;
 		typedef std::size_t							size_type;
 		typedef std::ptrdiff_t						difference_type;
-		typedef Compare key_compare;
 		typedef Allocator							allocator_type;
 		typedef value_type& reference;
 		typedef const value_type& const_reference;
 		typedef typename Allocator::pointer			pointer;
 		typedef typename Allocator::const_pointer 	const_pointer;
 
-
-		//NYI
-		// typedef ft::VectorIterator<value_type> iterator;
-		// typedef ft::VectorIterator< const value_type> const_iterator;
-		// typedef typename ft::reverse_iterator<iterator> reverse_iterator;
-		// typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef ft::MapIterator<Key, T, Compare> iterator;
+		typedef ft::MapIterator<Key, const T, Compare>  const_iterator;//not sure
+		typedef typename ft::reverse_iterator<iterator> reverse_iterator;
+		typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 		
 	private:
+		friend class ft::MapIterator<Key, T, Compare>;
 		class treeNode {
 			public:
-			value_type value;
+			value_type* value;
 			treeNode* right;
 			treeNode* left;
-			treeNode( const value_type& value, treeNode* right = NULL, treeNode* left = NULL) : value( value ), right( right ), left( left ) {}
+			treeNode* parent;
+			treeNode( const value_type& value, treeNode* parent = NULL, treeNode* right = NULL, treeNode* left = NULL ) : value( new value_type(value) ), right( right ), left( left ), parent( parent ) {}
 		};
-		
+
 		allocator_type _alloc;
 		size_type _size;
 		treeNode* _root;
 		Compare _comp;
 
 
-		treeNode* getNewNode( const value_type& data ) {
-			treeNode* treeNode = new class treeNode( data);
+		treeNode* getNewNode( const value_type& data, treeNode* parent ) {
+			treeNode* treeNode = new class treeNode( data, parent);
 			return treeNode;
 		}
 
 		//use lixicograph!!!!!!
-		treeNode* insertReq( treeNode* root, const value_type& value ) {
+		treeNode* insertReq( treeNode* root, treeNode* parent, const value_type& value ) {
 			if(root == NULL)
-				root = getNewNode( value );
-			else if(value.first <= root->value.first) {
-				root->left = insertReq( root->left, value );
+				root = getNewNode( value,  parent);
+			else if(value.first <= root->value->first) {
+				root->left = insertReq( root->left, root, value );
 			}
 			else {
-				root->right = insertReq( root->right, value );
+				root->right = insertReq( root->right, root, value );
 			}
 			return root;
 		}
 
 
 
-		treeNode* searchTree( treeNode* root, const Key& key ) {
+		treeNode* searchTree( treeNode* root, const Key& key ) const{
 			if(root == NULL)
 				return NULL;
-			if(root->value.first == key)
+			if(root->value->first == key)
 				return root;
-			else if(root->value.first <= key)
+			else if(root->value->first <= key)
 				return searchTree( root->right, key );
 			else
 				return searchTree( root->left, key );
 			return NULL;
+		}
+
+
+
+
+		treeNode* findMin( treeNode * root) const {
+			treeNode* out = root;
+			if(out->left == NULL)
+				return out;
+			out = findMin( out->left );
+			return out;
 		}
 	public:
 		//BASE MEMBERS
@@ -102,13 +127,25 @@ namespace ft {
 
 		//operator[]
 		T& operator[]( const Key& key ) {
-			return searchTree( _root, key )->value.second;
+			return searchTree( _root, key )->value->second;
 			//return iterator to insert later?
 		}
 
 		//ITERATORS
 		//begin
-
+		iterator begin() {
+			return iterator(findMin(_root), this);
+		}
+		const_iterator begin() const {
+			return const_iterator( findMin( _root ), this );
+		}
+		//end
+		iterator end() {
+			return iterator( NULL, this );
+		}
+		const_iterator end() const {
+			return const_iterator( NULL, this );
+		}
 		//CAPACITY
 		//empty
 		// bool empty() const {
@@ -134,7 +171,7 @@ namespace ft {
 		//(1)
 		// ft::pair<iterator, bool> insert( const value_type& value ) {
 		void insert( const value_type& value ) {
-			_root = insertReq( _root, value );
+			_root = insertReq( _root, NULL, value );
 		}
 		//erase
 
