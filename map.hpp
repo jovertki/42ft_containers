@@ -87,14 +87,14 @@ namespace ft {
 
 
 		treeNode* searchTree( treeNode* root, const Key& key ) const{
-			if(root == NULL)
-				return NULL;
-			if(root->value->first == key)
-				return root;
-			else if(root->value->first <= key)
-				return searchTree( root->right, key );
-			else
-				return searchTree( root->left, key );
+			if(root != NULL) {
+				if(root->value->first == key)
+					return root;
+				else if(root->value->first <= key)
+					return searchTree( root->right, key );
+				else
+					return searchTree( root->left, key );
+			}
 			return NULL;
 		}
 
@@ -124,11 +124,31 @@ namespace ft {
 
 		//ELEMENT ACCESS
 		//at
+		T& at( const Key& key ) {
+			treeNode* temp = searchTree( _root, key );
+			if(temp == NULL)
+				throw std::out_of_range( "map::at" );
+			else
+				return temp->value->second;
+		}
+		const T& at( const Key& key ) const{
+			treeNode* temp = searchTree( _root, key );
+			if(temp == NULL)
+				throw std::out_of_range( "map::at" );
+			else
+				return temp->value->second;
+		}
 
 		//operator[]
 		T& operator[]( const Key& key ) {
-			return searchTree( _root, key )->value->second;
-			//return iterator to insert later?
+			treeNode* temp = searchTree( _root, key );
+			if(temp != NULL) {
+				return temp->value->second;
+			}
+			else {
+				insert( ft::make_pair( key, T() ) );
+			}
+
 		}
 
 		//ITERATORS
@@ -148,9 +168,9 @@ namespace ft {
 		}
 		//CAPACITY
 		//empty
-		// bool empty() const {
-		// 	return begin() == end();
-		// }
+		bool empty() const {
+			return begin() == end();
+		}
 
 		//size
 		size_type size() const {

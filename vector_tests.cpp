@@ -1101,7 +1101,7 @@ int main() {
 	mymap.insert( ft::make_pair( 55, 55 ) );
 	std::cout << "the tree is built" << std::endl;
 
-	
+	std::cout << mymap.at( 234 ) << std::endl;
 	ft::map<int, int>::iterator it = mymap.begin();
 	// std::cout << "begin is " << it->second << std::endl;
 	// std::cout << "next to begin is " << (++it)->second << std::endl;
@@ -1114,22 +1114,22 @@ int main() {
 
 	std::cout << "std map test---------------------" << std::endl;
 
-	std::map<int, int> map;
-	map.insert( std::make_pair( 30, 30 ) );
-	map.insert( std::make_pair( 20, 20 ) );
-	map.insert( std::make_pair( 50, 50 ) );
-	map.insert( std::make_pair( 15, 15 ) );
-	map.insert( std::make_pair( 25, 25 ) );
-	map.insert( std::make_pair( 40, 40 ) );
-	map.insert( std::make_pair( 35, 35 ) );
-	map.insert( std::make_pair( 45, 45 ) );
-	map.insert( std::make_pair( 55, 55 ) );
-
-	std::map<int, int>::iterator its = map.begin();
+	std::map<int, int> mapp;
+	mapp.insert( std::make_pair( 30, 30 ) );
+	mapp.insert( std::make_pair( 20, 20 ) );
+	mapp.insert( std::make_pair( 50, 50 ) );
+	mapp.insert( std::make_pair( 15, 15 ) );
+	mapp.insert( std::make_pair( 25, 25 ) );
+	mapp.insert( std::make_pair( 40, 40 ) );
+	mapp.insert( std::make_pair( 35, 35 ) );
+	mapp.insert( std::make_pair( 45, 45 ) );
+	mapp.insert( std::make_pair( 55, 55 ) );
+	std::cout << mapp.at( 30 ) << std::endl;
+	std::map<int, int>::iterator its = mapp.begin();
 
 	its--;
 	
-	std::cout << "begin is " << map.begin()->second << std::endl;
-	std::cout << "next to begin is " << (++map.begin())->second << std::endl;
+	std::cout << "begin is " << mapp.begin()->second << std::endl;
+	std::cout << "next to begin is " << (++mapp.begin())->second << std::endl;
 
 }
