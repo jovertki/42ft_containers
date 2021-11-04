@@ -29,14 +29,16 @@ namespace ft {
 		typedef ft::map<Key, T, Compare> map;
 
 	private:
-		friend class ft::map<Key, T, Compare>;
 		const treeNode* _nodePtr;
-		const map* _tree;
-		MapIterator& operator=( MapIterator const& a );
-		MapIterator( const treeNode* curr, const map* root ) : _nodePtr( curr ), _tree( root ) {}
+		const treeNode* _tree;
 	public:
+		MapIterator( const treeNode* curr, const treeNode* root ) : _nodePtr( curr ), _tree( root ) {}
 		MapIterator() : _nodePtr( NULL ), _tree( NULL ) {}
 		MapIterator( MapIterator const& a ) : _nodePtr( a._nodePtr ), _tree( a._tree ) {}
+		MapIterator& operator=( MapIterator const& a ) {
+			_nodePtr = a._nodePtr;
+			return *this;
+		}
 		virtual ~MapIterator() {}
 
 		value_type& operator*() const {
@@ -45,12 +47,16 @@ namespace ft {
 		value_type* operator->() const {
 			return _nodePtr->value;
 		}
+
+		const treeNode* getNode() const {
+			return _nodePtr;
+		}
 		// 	//INCREMENTS DECREMENTS
 		MapIterator& operator++() {
 			treeNode* p;
 			if(_nodePtr == NULL)
 			{
-				return NULL;
+				return *this;
 			}
 			else
 				if(_nodePtr->right != NULL)
@@ -88,7 +94,7 @@ namespace ft {
 			treeNode* p;
 			if(_nodePtr == NULL)
 			{
-				_nodePtr = _tree->_root;
+				_nodePtr = _tree;
 				while(_nodePtr->right != NULL) {
 					_nodePtr = _nodePtr->right;
 				}

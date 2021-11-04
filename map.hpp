@@ -17,7 +17,7 @@ namespace ft {
 		class Key,
 		class T,
 		class Compare = std::less<Key>,
-		class Allocator = std::allocator<std::pair<const Key, T> >
+		class Allocator = std::allocator<ft::pair<const Key, T> >
 	> class map;
 }
 #include "MapIterator.hpp"
@@ -47,18 +47,24 @@ namespace ft {
 		typedef ft::MapIterator<Key, const T, Compare>  const_iterator;//not sure
 		typedef typename ft::reverse_iterator<iterator> reverse_iterator;
 		typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
-
-		
-	private:
-		friend class ft::MapIterator<Key, T, Compare>;
 		class treeNode {
 			public:
 			value_type* value;
 			treeNode* right;
 			treeNode* left;
 			treeNode* parent;
-			treeNode( const value_type& value, treeNode* parent = NULL, treeNode* right = NULL, treeNode* left = NULL ) : value( new value_type(value) ), right( right ), left( left ), parent( parent ) {}
+			treeNode(const value_type* value, treeNode* parent = NULL, treeNode* right = NULL, treeNode* left = NULL )
+				: value( const_cast<value_type*>(value) ), parent( parent ), right( right ), left( left ) {}
+			value_type* getValue() {
+				return value;
+			}
+			const value_type* getValue() const{
+				return value;
+			}
 		};
+
+		
+	private:
 
 		allocator_type _alloc;
 		size_type _size;
@@ -66,22 +72,30 @@ namespace ft {
 		Compare _comp;
 
 
-		treeNode* getNewNode( const value_type& data, treeNode* parent ) {
-			treeNode* treeNode = new class treeNode( data, parent);
+		treeNode* getNewNode( const value_type* data, treeNode* parent ) {
+			treeNode* treeNode = new class treeNode( data, parent );
 			return treeNode;
 		}
 
 		//use lixicograph!!!!!!
-		treeNode* insertReq( treeNode* root, treeNode* parent, const value_type& value ) {
-			if(root == NULL)
-				root = getNewNode( value,  parent);
-			else if(value.first <= root->value->first) {
-				root->left = insertReq( root->left, root, value );
+		ft::pair<ft::pair<iterator, bool>, treeNode*> insertReq( treeNode* root, treeNode* parent, const value_type* value ) {
+			ft::pair<ft::pair<iterator, bool>, treeNode*> out;
+			if(root == NULL) {
+				root = getNewNode( value, parent );
+				out = ft::make_pair( ft::make_pair( iterator( root, _root ), true ), root );
 			}
-			else {
-				root->right = insertReq( root->right, root, value );
+			else if(value->first < root->value->first) {
+				out = insertReq( root->left, root, value );
+				root->left = out.second;
 			}
-			return root;
+			else if(value->first > root->value->first) {
+				out = insertReq( root->right, root, value );
+				root->right = out.second;
+			}
+			else
+				out = ft::make_pair( ft::make_pair( iterator( root, _root ), false ), root );
+			out.second = root;
+			return out;
 		}
 
 
@@ -108,6 +122,18 @@ namespace ft {
 			out = findMin( out->left );
 			return out;
 		}
+
+		void    deleteAll( treeNode* node )
+		{
+			if(!node)
+				return;
+			deleteAll( node->left );
+			deleteAll( node->right );
+			_alloc.destroy( node->value );
+			_alloc.deallocate( node->value, sizeof( value_type ) );
+			delete node;
+			_size -= 1;
+		}
 	public:
 		//BASE MEMBERS
 		//constructors
@@ -115,7 +141,11 @@ namespace ft {
 		map() : _root( NULL ), _comp( Compare() ), _alloc( Allocator() ), _size( 0 ) {}
 		explicit map( const Compare& comp,
 			const Allocator& alloc = Allocator() ) : _root( NULL ), _comp(comp), _alloc(alloc), _size(0) {}
-		
+
+
+		virtual ~map() {
+			clear();
+		}
 		//get_allocator
 		allocator_type get_allocator() const {
 			return _alloc;
@@ -145,23 +175,21 @@ namespace ft {
 			if(temp != NULL) {
 				return temp->value->second;
 			}
-			else {
-				insert( ft::make_pair( key, T() ) );
-			}
+			return (insert( ft::make_pair( key, T() ) ).first)->second;
 
 		}
 
 		//ITERATORS
 		//begin
 		iterator begin() {
-			return iterator(findMin(_root), this);
+			return iterator( findMin( _root ), _root );
 		}
 		const_iterator begin() const {
 			return const_iterator( findMin( _root ), this );
 		}
 		//end
 		iterator end() {
-			return iterator( NULL, this );
+			return iterator( NULL, _root );
 		}
 		const_iterator end() const {
 			return const_iterator( NULL, this );
@@ -182,17 +210,35 @@ namespace ft {
 			return _alloc.max_size();
 		}
 
-
 		//MODIFIERS
 		//clear
-		void clear() {}
+		void clear() {
+			deleteAll( _root );
+		}
 
 		//insert
 		//(1)
-		// ft::pair<iterator, bool> insert( const value_type& value ) {
-		void insert( const value_type& value ) {
-			_root = insertReq( _root, NULL, value );
+		ft::pair<iterator, bool> insert( const value_type& value ) {
+			pointer temp = _alloc.allocate( 1 );
+			_alloc.construct( temp, value );
+
+			ft::pair<ft::pair<iterator, bool>, treeNode*> out = insertReq( _root, NULL, temp );
+			if (_size == 0)
+				_root = out.second;
+			_size++;
+			return out.first;
 		}
+		//(4)
+		// iterator insert( iterator hint, const value_type& value ) {
+		// 	pointer temp = _alloc.allocate( 1 );
+		// 	_alloc.construct( temp, value );
+
+		// 	ft::pair<ft::pair<iterator, bool>, treeNode*> out = insertReq( const_cast<treeNode*>(hint.getNode()), NULL, temp );
+		// 	if(_size == 0)
+		// 		_root = out.second;
+		// 	_size++;
+		// 	return out.first.first;
+		// }
 		//erase
 
 		//swap
