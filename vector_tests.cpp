@@ -1099,14 +1099,14 @@ int main() {
 	mymap.insert( ft::make_pair( 35, 35 ) );
 	mymap.insert( ft::make_pair( 45, 45 ) );
 	mymap.insert( ft::make_pair( 55, 55 ) );
+	// mymap[60] = 60;
 
 
 	std::cout << "the tree is built" << std::endl;
-	mymap[30] = 123;
-	mymap[60] = 12345;
-
-
-
+	// mymap[70] = 70;
+	// mymap[80] = 80;
+	std::cout << "value to erase = " << ((++mymap.begin()))->second << std::endl;
+	mymap.erase((++mymap.begin()));
 	
 	// ft::pair<ft::map<int, int>::iterator, bool> check = mymap.insert( ft::make_pair( 60, 60 ) );
 	
@@ -1138,10 +1138,7 @@ int main() {
 
 
 	std::cout << "the tree is built" << std::endl;
-	mapp[30] = 123;
-	mapp[60] = 12345;
-
-	mapp.insert( mapp.begin()++, std::make_pair( 44, 44 ) );
+	mapp[60] = 60;
 	std::cout << "full tree:" << std::endl;
 	for(std::map<int, int>::iterator itt = --(mapp.end()); itt != --mapp.begin(); itt--) {
 
