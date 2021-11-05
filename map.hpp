@@ -337,7 +337,7 @@ namespace ft {
 				node->parent->right = successor;
 			}
 			update( successor );
-			eraseReq( donor );
+			erasePos( donor );
 			return successor;
 		}
 
@@ -353,8 +353,9 @@ namespace ft {
 			}
 			return successor;
 		}
+
 		
-		void eraseReq(const treeNode* node ) {
+		void erasePos( const treeNode* node ) {
 			treeNode* successor = NULL;
 			//erase leaf
 			if(!node->right && !node->left) {
@@ -385,12 +386,88 @@ namespace ft {
 			_alloc.deallocate( node->value, sizeof( value_type ) );
 			delete node;
 		}
+
+
+
+		//EVERYTHING BELOW IS FOR ERASE 3, MADE WITH REQURSION
+
+		
+		// treeNode* succeedNodeReq( treeNode* successor, const treeNode* node ) {
+		// 	if(node->parent->left == node) {
+		// 		node->parent->left = successor;
+		// 		successor->parent = node->parent;
+		// 	}
+		// 	else {
+		// 		node->parent->right = successor;
+		// 		successor->parent = node->parent;
+		// 	}
+		// 	_alloc.deallocate( node->value, sizeof( value_type ) );
+		// 	delete node;
+		// 	return successor;
+		// }
+
+		// treeNode* eraseLeaf( const treeNode* node ) {
+		// 	treeNode* temp = node->parent;
+		// 	if(node->parent != NULL) {
+		// 		if(node->parent->left == node) {
+		// 			node->parent->left = NULL;
+		// 		}
+		// 		else {
+		// 			node->parent->right = NULL;
+		// 		}
+		// 	}
+		// 	_alloc.deallocate( node->value, sizeof( value_type ) );
+		// 	delete node;
+		// 	node = NULL;
+		// 	return temp;
+		// }
+		
+		// treeNode* eraseReq( treeNode* root, treeNode* parent, const Key& key ) {
+		// 	if(root->value->first > key) {
+		// 		root = eraseReq( root->left, root, key );
+		// 	}
+		// 	else if(root->value->first < key) {
+		// 		root = eraseReq( root->right, root, key );
+		// 	}
+		// 	else if(root->value->first == key) {
+		// 		if(!root->right && !root->left) {
+		// 			root = eraseLeaf( root );
+		// 		}
+		// 		else if(root->right && !root->left) {
+		// 			root = succeedNodeReq( root->right, root );
+		// 		}
+		// 		else if(root->left && !root->right) {
+		// 			root = succeedNodeReq( root->left, root );
+		// 		}
+		// 		else {
+		// 			treeNode* donor = root->right;
+		// 			while(donor->left != NULL)
+		// 				donor = donor->left;
+		// 			_alloc.deallocate( root->value, sizeof( value_type ) );
+		// 			root->value = donor->value;
+		// 			eraseReq( root->right, root, root->value->first );
+		// 		}
+		// 	}
+		// 	update( root );
+		// 	balance( root );
+		// 	return root;
+		// }
+
+
+
+
+
 		
 		//erase
+		//(1)
 		void erase( iterator pos ) {
-			eraseReq( pos.getNode() );
+			erasePos( pos.getNode() );
 		}
-
+		//(3)
+		// size_type erase( const Key& key ) {
+		// 	_root = eraseReq( _root, NULL, key );
+		// 	return 1;
+		// }
 		//swap
 
 	};

@@ -1106,7 +1106,7 @@ int main() {
 	// mymap[70] = 70;
 	// mymap[80] = 80;
 	std::cout << "value to erase = " << ((++mymap.begin()))->second << std::endl;
-	mymap.erase((++mymap.begin()));
+	mymap.erase(15);
 	
 	// ft::pair<ft::map<int, int>::iterator, bool> check = mymap.insert( ft::make_pair( 60, 60 ) );
 	
