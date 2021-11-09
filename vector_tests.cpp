@@ -1099,23 +1099,25 @@ int main() {
 	mymap.insert( ft::make_pair( 35, 35 ) );
 	mymap.insert( ft::make_pair( 45, 45 ) );
 	mymap.insert( ft::make_pair( 55, 55 ) );
-	// mymap[60] = 60;
+	mymap[60] = 60;
 
 
 	std::cout << "the tree is built" << std::endl;
 	// mymap[70] = 70;
 	// mymap[80] = 80;
-	std::cout << "value to erase = " << ((++mymap.begin()))->second << std::endl;
-	mymap.erase(15);
+	std::cout << "value to erase = " << ((++(++(++(mymap.begin())))))->second << std::endl;
+	mymap.erase(10);
 	
 	// ft::pair<ft::map<int, int>::iterator, bool> check = mymap.insert( ft::make_pair( 60, 60 ) );
 	
 	std::cout << "full tree:" << std::endl;
-	for(ft::map<int, int>::iterator itt = --(mymap.end()); itt != --mymap.begin(); itt--) {
+	for(ft::map<int, int>::iterator itt = mymap.begin(); itt != mymap.end(); itt++) {
 
 		std::cout << itt->second << std::endl;
 	}
 
+	std::cout << " equal range is" << std::endl;
+	std::cout << (*mymap.upper_bound( 23 )).second << " " << (*mymap.upper_bound( 23 )).second << std::endl;
 
 	std::cout << "----tree end---" << std::endl;
 
@@ -1135,14 +1137,17 @@ int main() {
 	mapp.insert( std::make_pair( 35, 35 ) );
 	mapp.insert( std::make_pair( 45, 45 ) );
 	mapp.insert( std::make_pair( 55, 55 ) );
+	mapp[60] = 60;
 
 
 	std::cout << "the tree is built" << std::endl;
-	mapp[60] = 60;
 	std::cout << "full tree:" << std::endl;
-	for(std::map<int, int>::iterator itt = --(mapp.end()); itt != --mapp.begin(); itt--) {
+	for(std::map<int, int>::iterator itt = mapp.begin(); itt != mapp.end(); itt++) {
 
 		std::cout << itt->second << std::endl;
 	}
+	
+	std::cout << " equal range is" << std::endl;
+	std::cout << (*mapp.upper_bound( 23 )).second << " " << (*mapp.upper_bound( 23 )).second << std::endl;
 
 }

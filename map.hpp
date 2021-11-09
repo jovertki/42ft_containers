@@ -138,17 +138,19 @@ namespace ft {
 			return rightRightCase( node );
 		}
 		treeNode* balance( treeNode* node ) {
-			if(node->balanceFactor == -2) {
-				if(node->left->balanceFactor <= 0)
-					return leftLeftCase( node );
-				else
-					return leftRightCase( node );
-			}
-			else if (node->balanceFactor == +2) {
-				if(node->right->balanceFactor >= 0)
-					return rightRightCase( node );
-				else
-					return rightLeftCase(node);
+			if(node != NULL) {
+				if(node->balanceFactor == -2) {
+					if(node->left->balanceFactor <= 0)
+						return leftLeftCase( node );
+					else
+						return leftRightCase( node );
+				}
+				else if(node->balanceFactor == +2) {
+					if(node->right->balanceFactor >= 0)
+						return rightRightCase( node );
+					else
+						return rightLeftCase( node );
+				}
 			}
 			return node;
 		}
@@ -190,6 +192,29 @@ namespace ft {
 			return NULL;
 		}
 
+		treeNode* searchTreeNotLess( treeNode* root, const Key& key ) const {
+			if(root != NULL) {
+				if(root->value->first < key && root->right != NULL && root->right->value->first >= key)
+					return root->right;
+				else if(root->value->first <= key)
+					return searchTreeNotLess( root->right, key );
+				else
+					return searchTreeNotLess( root->left, key );
+			}
+			return NULL;
+		}
+		
+		treeNode* searchTreeGreater( treeNode* root, const Key& key ) const {
+			if(root != NULL) {
+				if(root->value->first < key && root->right != NULL && root->right->value->first > key)
+					return root;
+				else if(root->value->first <= key)
+					return searchTreeGreater( root->right, key );
+				else
+					return searchTreeGreater( root->left, key );
+			}
+			return NULL;
+		}
 
 
 
@@ -272,6 +297,22 @@ namespace ft {
 		const_iterator end() const {
 			return const_iterator( NULL, this );
 		}
+		//rbegin
+		reverse_iterator rbegin() {
+			return reverse_iterator( end() );
+		}
+		const_reverse_iterator rbegin() const {
+			return const_reverse_iterator( end() );
+		}
+		//rend
+		reverse_iterator rend() {
+			return reverse_iterator( begin() );
+		}
+		const_reverse_iterator rend() const {
+			return const_reverse_iterator( begin() );
+		}
+
+		
 		//CAPACITY
 		//empty
 		bool empty() const {
@@ -317,7 +358,9 @@ namespace ft {
 		// 	return out.first.first;
 		// }
 
-		
+
+
+		//ERASE (1) STUFF BEGIN
 		treeNode* succeedWithTwo( const treeNode* node ) {
 			treeNode* donor = node->right;
 			while(donor->left != NULL)
@@ -386,73 +429,77 @@ namespace ft {
 			_alloc.deallocate( node->value, sizeof( value_type ) );
 			delete node;
 		}
-
+		//ERASE (1) STUFF END
 
 
 		//EVERYTHING BELOW IS FOR ERASE 3, MADE WITH REQURSION
+		treeNode* succeedNodeReq( treeNode* successor, const treeNode* node ) {
+			if(node->parent->left == node) {
+				node->parent->left = successor;
+				successor->parent = node->parent;
+			}
+			else {
+				node->parent->right = successor;
+				successor->parent = node->parent;
+			}
+			_alloc.deallocate( node->value, sizeof( value_type ) );
+			delete node;
+			return successor;
+		}
 
+		treeNode* eraseLeaf( const treeNode* node ) {
+			treeNode* temp = node->parent;
+			if(node->parent != NULL) {
+				if(node->parent->left == node) {
+					node->parent->left = NULL;
+				}
+				else {
+					node->parent->right = NULL;
+				}
+			}
+			_alloc.deallocate( node->value, sizeof( value_type ) );
+			delete node;
+			node = NULL;
+			return temp;
+		}
 		
-		// treeNode* succeedNodeReq( treeNode* successor, const treeNode* node ) {
-		// 	if(node->parent->left == node) {
-		// 		node->parent->left = successor;
-		// 		successor->parent = node->parent;
-		// 	}
-		// 	else {
-		// 		node->parent->right = successor;
-		// 		successor->parent = node->parent;
-		// 	}
-		// 	_alloc.deallocate( node->value, sizeof( value_type ) );
-		// 	delete node;
-		// 	return successor;
-		// }
-
-		// treeNode* eraseLeaf( const treeNode* node ) {
-		// 	treeNode* temp = node->parent;
-		// 	if(node->parent != NULL) {
-		// 		if(node->parent->left == node) {
-		// 			node->parent->left = NULL;
-		// 		}
-		// 		else {
-		// 			node->parent->right = NULL;
-		// 		}
-		// 	}
-		// 	_alloc.deallocate( node->value, sizeof( value_type ) );
-		// 	delete node;
-		// 	node = NULL;
-		// 	return temp;
-		// }
-		
-		// treeNode* eraseReq( treeNode* root, treeNode* parent, const Key& key ) {
-		// 	if(root->value->first > key) {
-		// 		root = eraseReq( root->left, root, key );
-		// 	}
-		// 	else if(root->value->first < key) {
-		// 		root = eraseReq( root->right, root, key );
-		// 	}
-		// 	else if(root->value->first == key) {
-		// 		if(!root->right && !root->left) {
-		// 			root = eraseLeaf( root );
-		// 		}
-		// 		else if(root->right && !root->left) {
-		// 			root = succeedNodeReq( root->right, root );
-		// 		}
-		// 		else if(root->left && !root->right) {
-		// 			root = succeedNodeReq( root->left, root );
-		// 		}
-		// 		else {
-		// 			treeNode* donor = root->right;
-		// 			while(donor->left != NULL)
-		// 				donor = donor->left;
-		// 			_alloc.deallocate( root->value, sizeof( value_type ) );
-		// 			root->value = donor->value;
-		// 			eraseReq( root->right, root, root->value->first );
-		// 		}
-		// 	}
-		// 	update( root );
-		// 	balance( root );
-		// 	return root;
-		// }
-
+		treeNode* eraseReq( treeNode* root, treeNode* parent, const Key& key ) {
+			_size--;
+			if(root == NULL) {
+				_size++;
+			}
+			else if(root->value->first > key) {
+				eraseReq( root->left, root, key );
+			}
+			else if(root->value->first < key) {
+				eraseReq( root->right, root, key );
+			}
+			else if(root->value->first == key) {
+				if(!root->right && !root->left) {
+					eraseLeaf( root );
+					root = NULL;
+				}
+				else if(root->right && !root->left) {
+					succeedNodeReq( root->right, root );
+				}
+				else if(root->left && !root->right) {
+					succeedNodeReq( root->left, root );
+				}
+				else {
+					treeNode* donor = root->right;
+					while(donor->left != NULL)
+						donor = donor->left;
+					_alloc.destroy( root->value );
+					//should I really do this this way? it is not really optimal
+					_alloc.construct(root->value, *donor->value);
+					eraseReq( root->right, root, root->value->first );
+				}
+			}
+			update( root );
+			balance( root );
+			return root;
+		}
+	//END OF ERASE (3) STUFF
 
 
 
@@ -461,15 +508,101 @@ namespace ft {
 		//erase
 		//(1)
 		void erase( iterator pos ) {
+			//I could find node with pos's value and do erase(3)
 			erasePos( pos.getNode() );
+			_size--;
+		}
+		//(2)
+		void erase( iterator first, iterator last ) {
+			//just call (1)???
+			while(first != last) {
+				erase( first );
+				first++;
+			}
 		}
 		//(3)
-		// size_type erase( const Key& key ) {
-		// 	_root = eraseReq( _root, NULL, key );
-		// 	return 1;
-		// }
+		size_type erase( const Key& key ) {
+			_root = eraseReq( _root, NULL, key );
+			return 1;
+		}
+		
 		//swap
 
+
+		//LOOKUP
+		//count
+		size_type count( const Key& key ) const {
+			if(searchTree( _root, key ) == NULL)
+				return 0;
+			else
+				return 1;
+		}
+		//find
+		//(1)
+		iterator find( const Key& key ){
+			treeNode* toFind = searchTree( _root, key );
+			if(toFind != NULL) {
+				return iterator( toFind, _root );
+			}
+			else
+				return end();
+		}
+		//(2)
+		const_iterator find( const Key& key ) const {
+			return find( key );
+		}
+
+		//equal_range
+		//(1)
+		ft::pair<iterator, iterator> equal_range( const Key& key ) {
+			treeNode* toFind = searchTreeNotLess( _root, key );
+			if(toFind != NULL) {
+				iterator temp = iterator( toFind, _root );
+				//works as there are no dublicates in map
+				if (toFind->value->first == key)
+					return ft::make_pair( temp, ++temp );
+				else
+					return ft::make_pair( temp, temp );
+			}
+			else {
+				return ft::make_pair( end(), end() );
+			}
+		}
+		//(2)
+		ft::pair<const_iterator, const_iterator> equal_range( const Key& key ) const {
+
+			return equal_range( key );
+		}
+
+		//lower_bound
+		//(1)
+		iterator lower_bound( const Key& key ){
+			treeNode* toFind = searchTreeNotLess( _root, key );
+			if(toFind != NULL) {
+				return iterator( toFind, _root );
+			}
+			else
+				return end();
+		}
+		//(2)
+		const_iterator lower_bound( const Key& key ) const {
+			return lower_bound( key );
+		}
+
+		//upper_bound
+		//(1)
+		iterator upper_bound( const Key& key ) {
+			treeNode* toFind = searchTreeGreater( _root, key );
+			if(toFind != NULL) {
+				return iterator( toFind, _root );
+			}
+			else
+				return end();
+		}
+		//(2)
+		const_iterator upper_bound( const Key& key ) const{
+			return upper_bound( key );
+		}
 	};
 
 }

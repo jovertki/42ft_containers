@@ -216,7 +216,7 @@ namespace ft {
 			return const_reverse_iterator( end());
 		}
 
-		//end
+		//rend
 		reverse_iterator rend() {
 			return reverse_iterator( begin());
 		}
