@@ -73,11 +73,13 @@ namespace ft {
 		size_type _size;
 		treeNode* _root;
 		Compare _comp;
-
+		typedef typename Allocator::template rebind<treeNode>::other node_allocator_type;
+		node_allocator_type _altn;
 
 		treeNode* getNewNode( const value_type* data, treeNode* parent ) {
-			treeNode* treeNode = new class treeNode( data, parent );
-			return treeNode;
+			treeNode* node = _altn.allocate( 1 );
+			_altn.construct( node, treeNode( data, parent ) );
+			return node;
 		}
 
 
@@ -234,7 +236,8 @@ namespace ft {
 			deleteAll( node->right );
 			_alloc.destroy( node->value );
 			_alloc.deallocate( node->value, sizeof( value_type ) );
-			delete node;
+			_altn.destroy( node );
+			_altn.deallocate( node, sizeof(treeNode));
 			_size -= 1;
 		}
 	public:
@@ -365,7 +368,8 @@ namespace ft {
 			treeNode* donor = node->right;
 			while(donor->left != NULL)
 				donor = donor->left;
-			treeNode* successor = new treeNode( NULL, node->parent, node->right, node->left );
+			treeNode* successor = _altn.allocate( 1 );
+			_altn.construct( successor, treeNode( NULL, node->parent, node->right, node->left ) );
 			successor->value = _alloc.allocate( 1 );
 			_alloc.construct(successor->value, *donor->value);
 			node->right->parent = successor;
@@ -385,7 +389,7 @@ namespace ft {
 		}
 
 		
-		treeNode* succeedNode( treeNode* successor, const treeNode* node ) {
+		treeNode* succeedNode( treeNode* successor, treeNode* node ) {
 			if(node->parent->left == node) {
 				node->parent->left = successor;
 				successor->parent = node->parent;
@@ -398,7 +402,7 @@ namespace ft {
 		}
 
 		
-		void erasePos( const treeNode* node ) {
+		void erasePos( treeNode* node ) {
 			treeNode* successor = NULL;
 			//erase leaf
 			if(!node->right && !node->left) {
@@ -427,13 +431,14 @@ namespace ft {
 			update( node->parent );
 			balance( node->parent );
 			_alloc.deallocate( node->value, sizeof( value_type ) );
-			delete node;
+			_altn.destroy( node );
+			_altn.deallocate( node, sizeof( treeNode ) );
 		}
 		//ERASE (1) STUFF END
 
 
 		//EVERYTHING BELOW IS FOR ERASE 3, MADE WITH REQURSION
-		treeNode* succeedNodeReq( treeNode* successor, const treeNode* node ) {
+		treeNode* succeedNodeReq( treeNode* successor, treeNode* node ) {
 			if(node->parent->left == node) {
 				node->parent->left = successor;
 				successor->parent = node->parent;
@@ -443,11 +448,12 @@ namespace ft {
 				successor->parent = node->parent;
 			}
 			_alloc.deallocate( node->value, sizeof( value_type ) );
-			delete node;
+			_altn.destroy( node );
+			_altn.deallocate( node, sizeof( treeNode ) );
 			return successor;
 		}
 
-		treeNode* eraseLeaf( const treeNode* node ) {
+		treeNode* eraseLeaf( treeNode* node ) {
 			treeNode* temp = node->parent;
 			if(node->parent != NULL) {
 				if(node->parent->left == node) {
@@ -458,7 +464,8 @@ namespace ft {
 				}
 			}
 			_alloc.deallocate( node->value, sizeof( value_type ) );
-			delete node;
+			_altn.destroy( node );
+			_altn.deallocate( node, sizeof( treeNode ) );
 			node = NULL;
 			return temp;
 		}
