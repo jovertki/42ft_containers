@@ -83,12 +83,11 @@ namespace ft {
 
 
 	public:
-		class value_compare
-		{
+		class value_compare {
 		protected:
 			Compare _comp;
-			value_compare( const Compare& c ) : _comp( c ) {}
 		public:
+			value_compare( const Compare& c ) : _comp( c ) {}
 			bool operator()( const value_type& lhs,	const value_type& rhs ) const
 			{
 				return (this->_comp( lhs.first, rhs.first ));
@@ -277,10 +276,11 @@ namespace ft {
 
 		treeNode* findMin( treeNode * root) const{
 			treeNode* out = root;
-			if(out->left == NULL)
-				return out;
-			out = findMin( out->left );
-			return out;
+			if(out != NULL) {
+				if(out->left == NULL)
+					return out;
+				out = findMin( out->left );
+			}return out;
 		}
 
 
@@ -293,7 +293,7 @@ namespace ft {
 			_alloc.destroy( node->value );
 			_alloc.deallocate( node->value, sizeof( value_type ) );
 			_altn.destroy( node );
-			_altn.deallocate( node, sizeof(treeNode));
+			_altn.deallocate( node, sizeof( treeNode ) );
 			_size -= 1;
 		}
 	public:
@@ -308,19 +308,24 @@ namespace ft {
 		template< class InputIt >
 		map( InputIt first, InputIt last,
 			const Compare& comp = Compare(),
-			const Allocator& alloc = Allocator() ) : _alloc( alloc ), _size( ft::distance(first, last) ), _root( NULL ), _comp( comp ), _altn( node_allocator_type() ) {
+			const Allocator& alloc = Allocator() ) : _alloc( alloc ), _size( 0 ), _root( NULL ), _comp( comp ), _altn( node_allocator_type() ) {
 			insert( first, last );
 		}
 		//copy
-		map( const map& other ) : _alloc( other._alloc ), _size( other._size ), _root( NULL ), _comp( other._comp ), _altn( other._altn ) {
+		map( const map& other ) : _alloc( other._alloc ), _size( 0 ), _root( NULL ), _comp( other._comp ), _altn( other._altn ) {
 			insert( other.begin(), other.end() );
 		}
 
 
 		map& operator=( const map& other ){
 			if(this != &other) {
-				~map();
-				this->map( other );
+				deleteAll( _root );
+				_alloc = other._alloc;
+				_size = 0;
+				_root = NULL;
+				_comp = other._comp;
+				_altn = other._altn;
+				insert( other.begin(), other.end() );
 			}
 			return *this;
 		}
@@ -328,6 +333,7 @@ namespace ft {
 		
 		virtual ~map() {
 			clear();
+			_root = NULL;
 		}
 		//get_allocator
 		allocator_type get_allocator() const {
@@ -406,13 +412,14 @@ namespace ft {
 
 		//max_size
 		size_type max_size() const {
-			return _alloc.max_size();
+			return _altn.max_size();
 		}
 
 		//MODIFIERS
 		//clear
 		void clear() {
 			deleteAll( _root );
+			_root = NULL;
 		}
 
 		//insert
@@ -536,6 +543,7 @@ namespace ft {
 			_alloc.deallocate( node->value, sizeof( value_type ) );
 			_altn.destroy( node );
 			_altn.deallocate( node, sizeof( treeNode ) );
+			node = NULL;
 			return successor;
 		}
 
@@ -562,11 +570,11 @@ namespace ft {
 				_size++;
 			}
 			else if(root->value->first > key) {
-				eraseReq( root->left, root, key );
+				eraseReq( root->left, key );
 				_size++;
 			}
 			else if(root->value->first < key) {
-				eraseReq( root->right, root, key );
+				eraseReq( root->right, key );
 				_size++;
 			}
 			else if(root->value->first == key) {
@@ -587,7 +595,8 @@ namespace ft {
 					_alloc.destroy( root->value );
 					//should I really do this this way? it is not really optimal
 					_alloc.construct(root->value, *donor->value);
-					eraseReq( root->right, root, root->value->first );
+					eraseReq( root->right, root->value->first );
+					_size++;
 				}
 			}
 			update( root );
@@ -604,8 +613,8 @@ namespace ft {
 		//(1)
 		void erase( iterator pos ) {
 			//I could find node with pos's value and do erase(3)
-			erasePos( pos.getNode() );
-			_size--;
+			erase( (*pos).first );
+			// erasePos( pos.getNode() );
 		}
 		//(2)
 		void erase( iterator first, iterator last ) {

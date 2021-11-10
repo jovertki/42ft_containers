@@ -95,6 +95,8 @@ namespace ft {
 			if(_nodePtr == NULL)
 			{
 				_nodePtr = _tree;
+				if(_nodePtr == NULL)
+					return *this;
 				while(_nodePtr->right != NULL) {
 					_nodePtr = _nodePtr->right;
 				}
