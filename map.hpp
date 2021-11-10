@@ -83,6 +83,20 @@ namespace ft {
 		}
 
 
+	public:
+		class value_compare
+		{
+		protected:
+			Compare _comp;
+			value_compare( const Compare& c ) : _comp( c ) {}
+		public:
+			bool operator()( const value_type& lhs,	const value_type& rhs ) const
+			{
+				return (this->_comp( lhs.first, rhs.first ));
+			}
+		};
+	private:
+
 		bool compValues( const value_type& value1, const value_type& value2 ) const{
 			return _comp( value1.first, value2.first );
 		}
@@ -629,6 +643,18 @@ namespace ft {
 		const_iterator upper_bound( const Key& key ) const{
 			return upper_bound( key );
 		}
+
+
+		//OBSERVERS
+		key_compare key_comp() const{
+			return _comp;
+		}
+		
+		value_compare value_comp() const{
+			return value_compare( _comp );
+		}
+
+
 	};
 
 }
