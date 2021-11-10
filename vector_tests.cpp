@@ -1117,7 +1117,7 @@ int main() {
 	}
 
 	std::cout << " equal range is" << std::endl;
-	std::cout << (*mymap.upper_bound( 23 )).second << " " << (*mymap.upper_bound( 23 )).second << std::endl;
+	std::cout << (*mymap.upper_bound( 50 )).second << " " << (*mymap.upper_bound( 50 )).second << std::endl;
 
 	std::cout << "----tree end---" << std::endl;
 
@@ -1148,6 +1148,22 @@ int main() {
 	}
 	
 	std::cout << " equal range is" << std::endl;
-	std::cout << (*mapp.upper_bound( 23 )).second << " " << (*mapp.upper_bound( 23 )).second << std::endl;
+	std::cout << (*mapp.upper_bound( 50 )).second << " " << (*mapp.upper_bound( 50 )).second << std::endl;
 
+
+
+
+
+
+
+	ft::map<int, int> mymap1;
+	mymap1.insert( ft::make_pair( 30, 30 ) );
+	mymap1.insert( ft::make_pair( 20, 20 ) );
+	mymap1.insert( ft::make_pair( 50, 50 ) );
+
+	ft::map<int, int> mymap2( mymap1 );
+	for(ft::map<int, int>::iterator itt = mymap2.begin(); itt != mymap2.end(); itt++) {
+
+		std::cout << itt->second << std::endl;
+	}
 }
