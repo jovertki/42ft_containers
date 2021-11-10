@@ -35,10 +35,12 @@ int		main(void)
 	ft_erase(mp, ++mp.begin());
 
 	ft_erase(mp, mp.begin());
-	ft_erase(mp, --mp.end());
+	ft_erase(mp, --mp.end()); // <- here is the
 
-	ft_erase(mp, mp.begin(), ++(++(++mp.begin())));
-	ft_erase(mp, --(--(--mp.end())), --mp.end());
+	ft_erase( mp, mp.begin(), ++(++(++mp.begin())) );
+
+	
+	ft_erase( mp, --(--(--mp.end())), --mp.end() );
 
 	mp[10] = "Hello";
 	mp[11] = "Hi there";
