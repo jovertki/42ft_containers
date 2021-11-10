@@ -83,10 +83,33 @@ namespace ft {
 		}
 
 
-
-
+		bool compValues( const value_type& value1, const value_type& value2 ) const{
+			return _comp( value1.first, value2.first );
+		}
+		
+		//key compares
+		//==
+		bool keysEqual( const Key& key1, const Key& key2 )const {
+			if(!_comp( key1, key2 ) && !_comp( key2, key1 ))
+				return true;
+			return false;
+		}
+		//<=
+		bool keysEqualLess( const Key& key1, const Key& key2 )const {
+			if (keysEqual(key1, key2) || _comp(key1, key2))
+				return true;
+			return false;
+		}
+		//>=
+		bool keysEqualMore( const Key& key1, const Key& key2 )const {
+			if(keysEqual( key1, key2 ) || _comp( key2, key1 ))
+				return true;
+			return false;
+		}
 
 		
+
+		//update balance factor for a node
 		void update( treeNode* node ) {
 			if (node != NULL){
 				int lh = -1;
@@ -157,36 +180,35 @@ namespace ft {
 			return node;
 		}
 
-		
-		//use lixicograph!!!!!!
+		//use compare objects
 		ft::pair<ft::pair<iterator, bool>, treeNode*> insertReq( treeNode* root, treeNode* parent, const value_type* value ) {
 			ft::pair<ft::pair<iterator, bool>, treeNode*> out;
 			if(root == NULL) {
 				root = getNewNode( value, parent );
 				out = ft::make_pair( ft::make_pair( iterator( root, _root ), true ), root );
 			}
-			else if(value->first < root->value->first) {
+			else if(compValues(*value, *root->value)) {
 				out = insertReq( root->left, root, value );
 				root->left = out.second;
 			}
-			else if(value->first > root->value->first) {
+			else if(compValues(*root->value, *value )) {
 				out = insertReq( root->right, root, value );
 				root->right = out.second;
 			}
 			else
 				out = ft::make_pair( ft::make_pair( iterator( root, _root ), false ), root );
 			update( root );
-			out.second = balance(root);
+			out.second = balance( root );
 			return out;
 		}
 
 
 
-		treeNode* searchTree( treeNode* root, const Key& key ) const{
+		treeNode* searchTree( treeNode* root, const Key& key ) const {
 			if(root != NULL) {
-				if(root->value->first == key)
+				if(keysEqual(root->value->first, key))
 					return root;
-				else if(root->value->first <= key)
+				else if (keysEqualLess(root->value->first, key))
 					return searchTree( root->right, key );
 				else
 					return searchTree( root->left, key );
@@ -194,31 +216,51 @@ namespace ft {
 			return NULL;
 		}
 
-		treeNode* searchTreeNotLess( treeNode* root, const Key& key ) const {
-			if(root != NULL) {
-				if(root->value->first < key && root->right != NULL && root->right->value->first >= key)
-					return root->right;
-				else if(root->value->first <= key)
-					return searchTreeNotLess( root->right, key );
-				else
-					return searchTreeNotLess( root->left, key );
-			}
-			return NULL;
-		}
-		
-		treeNode* searchTreeGreater( treeNode* root, const Key& key ) const {
-			if(root != NULL) {
-				if(root->value->first < key && root->right != NULL && root->right->value->first > key)
-					return root;
-				else if(root->value->first <= key)
-					return searchTreeGreater( root->right, key );
-				else
-					return searchTreeGreater( root->left, key );
-			}
-			return NULL;
-		}
 
 
+		treeNode* upper_boundReq( treeNode* root, const Key& key ) {
+			treeNode* tmp = _root;
+			while(root)
+            {
+				if(!_comp( key, root->value->first )) // value <= key
+                    root = root->right;
+                else // value > key
+                {
+                    if (root->left)
+                    {
+						tmp = upper_boundReq( root->left, key );
+                        if (tmp)
+                            root = tmp;
+                        break;
+                    }
+                    else
+                        break;
+                }
+            }
+            return root;
+		}
+
+		treeNode* lower_boundReq( treeNode* root, const Key& key ) {
+			treeNode* tmp = _root;
+			while(root)
+			{
+				if(_comp(root->value->first, key )) // value < key
+					root = root->right;
+				else // value >= key
+				{
+					if(root->left)
+					{
+						tmp = lower_boundReq( root->left, key );
+						if(tmp)
+							root = tmp;
+						break;
+					}
+					else
+						break;
+				}
+			}
+			return root;
+		}
 
 		treeNode* findMin( treeNode * root) const {
 			treeNode* out = root;
@@ -562,49 +604,26 @@ namespace ft {
 		//equal_range
 		//(1)
 		ft::pair<iterator, iterator> equal_range( const Key& key ) {
-			treeNode* toFind = searchTreeNotLess( _root, key );
-			if(toFind != NULL) {
-				iterator temp = iterator( toFind, _root );
-				//works as there are no dublicates in map
-				if (toFind->value->first == key)
-					return ft::make_pair( temp, ++temp );
-				else
-					return ft::make_pair( temp, temp );
-			}
-			else {
-				return ft::make_pair( end(), end() );
-			}
+			return ft::make_pair( lower_bound( key ), upper_bound( key ) );
 		}
 		//(2)
 		ft::pair<const_iterator, const_iterator> equal_range( const Key& key ) const {
-
-			return equal_range( key );
+			return ft::make_pair( lower_bound( key ), upper_bound( key ) );
 		}
 
 		//lower_bound
 		//(1)
-		iterator lower_bound( const Key& key ){
-			treeNode* toFind = searchTreeNotLess( _root, key );
-			if(toFind != NULL) {
-				return iterator( toFind, _root );
-			}
-			else
-				return end();
+		iterator lower_bound( const Key& key ) {
+			return iterator( lower_boundReq( _root, key ), _root );
 		}
 		//(2)
 		const_iterator lower_bound( const Key& key ) const {
 			return lower_bound( key );
 		}
-
 		//upper_bound
 		//(1)
 		iterator upper_bound( const Key& key ) {
-			treeNode* toFind = searchTreeGreater( _root, key );
-			if(toFind != NULL) {
-				return iterator( toFind, _root );
-			}
-			else
-				return end();
+			return iterator(upper_boundReq( _root, key ), _root);
 		}
 		//(2)
 		const_iterator upper_bound( const Key& key ) const{
