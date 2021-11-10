@@ -70,12 +70,13 @@ namespace ft {
 	//isConst
 	template <typename T> bool isConst( T& x )
 	{
-		return false;
+
+		return x != x;
 	}
 
 	template <typename T> bool isConst( T const& x )
 	{
-		return true;
+		return x == x;
 	}
 
 

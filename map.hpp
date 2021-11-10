@@ -44,7 +44,7 @@ namespace ft {
 		typedef typename Allocator::const_pointer 	const_pointer;
 
 		typedef ft::MapIterator<Key, T, Compare> iterator;
-		typedef ft::MapIterator<Key, const T, Compare>  const_iterator;//not sure
+		typedef ft::MapIterator<Key, T, Compare>  const_iterator;//not sure
 		typedef typename ft::reverse_iterator<iterator> reverse_iterator;
 		typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 		class treeNode {
@@ -56,8 +56,7 @@ namespace ft {
 			int balanceFactor;
 			int height;
 			treeNode( const value_type* value, treeNode* parent = NULL, treeNode* right = NULL, treeNode* left = NULL )
-				: value( const_cast<value_type*>(value) ), parent( parent ),
-				right( right ), left( left ), balanceFactor( 0 ), height( 0 ) {}
+				: value( const_cast<value_type*>(value) ), right( right ), left( left ), parent( parent ), balanceFactor( 0 ), height( 0 ) {}
 			value_type* getValue() {
 				return value;
 			}
@@ -232,7 +231,7 @@ namespace ft {
 
 
 
-		treeNode* upper_boundReq( treeNode* root, const Key& key ) {
+		treeNode* upper_boundReq( treeNode* root, const Key& key ) const {
 			treeNode* tmp = _root;
 			while(root)
             {
@@ -254,7 +253,7 @@ namespace ft {
             return root;
 		}
 
-		treeNode* lower_boundReq( treeNode* root, const Key& key ) {
+		treeNode* lower_boundReq( treeNode* root, const Key& key ) const {
 			treeNode* tmp = _root;
 			while(root)
 			{
@@ -276,13 +275,14 @@ namespace ft {
 			return root;
 		}
 
-		treeNode* findMin( treeNode * root) const {
+		treeNode* findMin( treeNode * root) const{
 			treeNode* out = root;
 			if(out->left == NULL)
 				return out;
 			out = findMin( out->left );
 			return out;
 		}
+
 
 		void    deleteAll( treeNode* node )
 		{
@@ -300,11 +300,32 @@ namespace ft {
 		//BASE MEMBERS
 		//constructors
 		//default
-		map() : _root( NULL ), _comp( Compare() ), _alloc( Allocator() ), _size( 0 ) {}
+		map() : _alloc( Allocator() ), _size( 0 ), _root( NULL ), _comp( Compare() ), _altn( node_allocator_type() ) {}
 		explicit map( const Compare& comp,
-			const Allocator& alloc = Allocator() ) : _root( NULL ), _comp(comp), _alloc(alloc), _size(0) {}
+			const Allocator& alloc = Allocator() ) : _alloc( alloc ), _size( 0 ), _root( NULL ), _comp( comp ), _altn( node_allocator_type() ) {}
+
+		//range
+		template< class InputIt >
+		map( InputIt first, InputIt last,
+			const Compare& comp = Compare(),
+			const Allocator& alloc = Allocator() ) : _alloc( alloc ), _size( ft::distance(first, last) ), _root( NULL ), _comp( comp ), _altn( node_allocator_type() ) {
+			insert( first, last );
+		}
+		//copy
+		map( const map& other ) : _alloc( other._alloc ), _size( other._size ), _root( NULL ), _comp( other._comp ), _altn( other._altn ) {
+			insert( other.begin(), other.end() );
+		}
 
 
+		map& operator=( const map& other ){
+			if(this != &other) {
+				~map();
+				this->map( other );
+			}
+			return *this;
+		}
+
+		
 		virtual ~map() {
 			clear();
 		}
@@ -347,14 +368,14 @@ namespace ft {
 			return iterator( findMin( _root ), _root );
 		}
 		const_iterator begin() const {
-			return const_iterator( findMin( _root ), this );
+			return const_iterator( findMin( _root ), _root );
 		}
 		//end
 		iterator end() {
 			return iterator( NULL, _root );
 		}
 		const_iterator end() const {
-			return const_iterator( NULL, this );
+			return const_iterator( NULL, _root );
 		}
 		//rbegin
 		reverse_iterator rbegin() {
@@ -416,6 +437,15 @@ namespace ft {
 		// 	_size++;
 		// 	return out.first.first;
 		// }
+
+		//(7)
+		template< class InputIt >
+		void insert( InputIt first, InputIt last ) {
+			while(first != last) {
+				insert( *first );
+				first++;
+			}
+		}
 
 
 
@@ -526,16 +556,18 @@ namespace ft {
 			return temp;
 		}
 		
-		treeNode* eraseReq( treeNode* root, treeNode* parent, const Key& key ) {
+		treeNode* eraseReq( treeNode* root, const Key& key ) {
 			_size--;
 			if(root == NULL) {
 				_size++;
 			}
 			else if(root->value->first > key) {
 				eraseReq( root->left, root, key );
+				_size++;
 			}
 			else if(root->value->first < key) {
 				eraseReq( root->right, root, key );
+				_size++;
 			}
 			else if(root->value->first == key) {
 				if(!root->right && !root->left) {
@@ -585,7 +617,7 @@ namespace ft {
 		}
 		//(3)
 		size_type erase( const Key& key ) {
-			_root = eraseReq( _root, NULL, key );
+			_root = eraseReq( _root, key );
 			return 1;
 		}
 		
@@ -632,7 +664,7 @@ namespace ft {
 		}
 		//(2)
 		const_iterator lower_bound( const Key& key ) const {
-			return lower_bound( key );
+			return iterator( lower_boundReq( _root, key ), _root );
 		}
 		//upper_bound
 		//(1)
@@ -641,7 +673,7 @@ namespace ft {
 		}
 		//(2)
 		const_iterator upper_bound( const Key& key ) const{
-			return upper_bound( key );
+			return iterator( upper_boundReq( _root, key ), _root );
 		}
 
 
