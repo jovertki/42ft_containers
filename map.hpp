@@ -531,23 +531,27 @@ namespace ft {
 
 
 		//EVERYTHING BELOW IS FOR ERASE 3, MADE WITH REQURSION
-		treeNode* succeedNodeReq( treeNode* successor, treeNode* node ) {
-			if(node->parent->left == node) {
-				node->parent->left = successor;
-				successor->parent = node->parent;
+		treeNode* succeedNodeReq( treeNode* successor, treeNode* node, bool dealloc) {
+			if(node->parent != NULL) {
+				if(node->parent->left == node) {
+					node->parent->left = successor;
+					successor->parent = node->parent;
+				}
+				else {
+					node->parent->right = successor;
+				}
 			}
-			else {
-				node->parent->right = successor;
-				successor->parent = node->parent;
+			successor->parent = node->parent;
+			if(dealloc) {
+				_alloc.deallocate( node->value, sizeof( value_type ) );
+				_altn.destroy( node );
+				_altn.deallocate( node, sizeof( treeNode ) );
+				node = NULL;
 			}
-			_alloc.deallocate( node->value, sizeof( value_type ) );
-			_altn.destroy( node );
-			_altn.deallocate( node, sizeof( treeNode ) );
-			node = NULL;
 			return successor;
 		}
 
-		treeNode* eraseLeaf( treeNode* node ) {
+		treeNode* eraseLeaf( treeNode* node, bool dealloc) {
 			treeNode* temp = node->parent;
 			if(node->parent != NULL) {
 				if(node->parent->left == node) {
@@ -557,50 +561,83 @@ namespace ft {
 					node->parent->right = NULL;
 				}
 			}
-			_alloc.deallocate( node->value, sizeof( value_type ) );
-			_altn.destroy( node );
-			_altn.deallocate( node, sizeof( treeNode ) );
-			node = NULL;
+			if(dealloc) {
+				_alloc.deallocate( node->value, sizeof( value_type ) );
+				_altn.destroy( node );
+				_altn.deallocate( node, sizeof( treeNode ) );
+				node = NULL;
+			}
 			return temp;
 		}
 		
-		treeNode* eraseReq( treeNode* root, const Key& key ) {
-			_size--;
+		treeNode* eraseReq( treeNode* root, const Key& key, bool dealloc) {
 			if(root == NULL) {
-				_size++;
 			}
 			else if(root->value->first > key) {
-				eraseReq( root->left, key );
-				_size++;
+				eraseReq( root->left, key, dealloc );
+
 			}
 			else if(root->value->first < key) {
-				eraseReq( root->right, key );
-				_size++;
+				eraseReq( root->right, key, dealloc );
 			}
 			else if(root->value->first == key) {
 				if(!root->right && !root->left) {
-					eraseLeaf( root );
+					eraseLeaf( root, dealloc );
 					root = NULL;
+					if(dealloc)
+						_size--;
 				}
 				else if(root->right && !root->left) {
-					succeedNodeReq( root->right, root );
+					root = succeedNodeReq( root->right, root, dealloc );
+					if (dealloc)
+						_size--;
 				}
 				else if(root->left && !root->right) {
-					succeedNodeReq( root->left, root );
+					root = succeedNodeReq( root->left, root, dealloc );
+					if(dealloc)
+						_size--;
 				}
 				else {
 					treeNode* donor = root->right;
 					while(donor->left != NULL)
 						donor = donor->left;
-					_alloc.destroy( root->value );
-					//should I really do this this way? it is not really optimal
-					_alloc.construct(root->value, *donor->value);
-					eraseReq( root->right, root->value->first );
-					_size++;
+					//there cant be left in donor
+					donor->left = root->left;
+					if(root->left)
+						root->left->parent = donor;
+
+					if(donor->parent) {
+						donor->parent->left = donor->right;
+					}
+					if(donor->right)
+						donor->right->parent = donor->parent;
+
+					if(root->right == donor)
+						donor->right = root->right->right;
+					else
+						donor->right = root->right;
+					if(donor->right)
+						donor->right->parent = donor;
+					donor->parent = root->parent;
+					if(donor->parent) {
+						if(donor->parent->left == root)
+							donor->parent->left = donor;
+						else
+							donor->parent->right = donor;
+					}
+					_alloc.deallocate( root->value, sizeof( value_type ) );
+					_altn.destroy( root );
+					_altn.deallocate( root, sizeof( treeNode ) );
+					root = NULL;
+					eraseReq( donor->right, donor->value->first, false );
+					update( donor );
+					root = balance( donor );
+					_size--;
 				}
 			}
+			
 			update( root );
-			balance( root );
+			root = balance( root );
 			return root;
 		}
 	//END OF ERASE (3) STUFF
@@ -620,14 +657,23 @@ namespace ft {
 		void erase( iterator first, iterator last ) {
 			//just call (1)???
 			while(first != last) {
+				iterator next = first;
+				next++;
 				erase( first );
-				first++;
+				first = next;
 			}
 		}
 		//(3)
 		size_type erase( const Key& key ) {
-			_root = eraseReq( _root, key );
-			return 1;
+			size_type temp = _size;
+
+			_root = eraseReq( _root, key, true );
+			update( _root );
+			_root = balance( _root );
+
+			if(temp != _size)
+				return 1;
+			return 0;
 		}
 		
 		//swap
