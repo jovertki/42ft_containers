@@ -161,4 +161,13 @@ int		main( void )
 	for(TESTED_NAMESPACE::map<T1, T2>::iterator it = mp.begin(); it != mp.end(); it++)
 		std::cout << (*it).first << "  " << (*it).second << std::endl;
 	ft_erase( mp, --(--(--mp.end())), mp.end() );
+
+
+	ft::vector<int> vec;
+	vec.push_back( 234 );
+	ft::vector<int>::iterator it = vec.begin();
+	std::cout << *it << std::endl;
+
+	vec.insert( it, 2, 3 );
+	
 }

@@ -447,7 +447,7 @@ namespace ft {
 
 		//(7)
 		template< class InputIt >
-		void insert( InputIt first, InputIt last ) {
+		void insert( InputIt first, InputIt last, typename ft::enable_if < !ft::is_integral<InputIt>::value || !ft::is_pair<InputIt, Key, T>::value, char>::type* = 0/*NULL*/ ) {
 			while(first != last) {
 				insert( *first );
 				first++;
@@ -699,7 +699,12 @@ namespace ft {
 		}
 		//(2)
 		const_iterator find( const Key& key ) const {
-			return find( key );
+			treeNode* toFind = searchTree( _root, key );
+			if(toFind != NULL) {
+				return iterator( toFind, _root );
+			}
+			else
+				return end();
 		}
 
 		//equal_range
