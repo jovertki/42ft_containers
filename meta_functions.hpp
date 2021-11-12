@@ -36,8 +36,5 @@ namespace ft {
 	template<>  struct is_integral<long> { static const bool value = true; };
 	template<>  struct is_integral<unsigned long> { static const bool value = true; };
 
-	template<typename T, typename U, typename X>
-	struct is_pair { static const bool  value = false; };
-	
-	template<typename U, typename X>  struct is_pair< ft::pair<U, X>, U, X> { static const bool value = true; };
-}
+
+	}
