@@ -34,21 +34,112 @@ int		main(void)
 {
 	TESTED_NAMESPACE::map<T1, T2> mp, mp2;
 
-	ft_insert(mp, T3(42, "lol"));
-	ft_insert(mp, T3(42, "mdr"));
+	{
+		_pair<iterator, bool> tmp;
 
-	ft_insert(mp, T3(50, "mdr"));
-	ft_insert(mp, T3(35, "funny"));
+		std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+		tmp = mp.insert( T3( 42, "lol" ) );
+		std::cout << "insert return: " << printPair( tmp.first );
+		std::cout << "Created new node: " << tmp.second << std::endl;
+		printSize( mp );
+	}
 
-	ft_insert(mp, T3(45, "bunny"));
-	ft_insert(mp, T3(21, "fizz"));
-	ft_insert(mp, T3(38, "buzz"));
+	{
+		_pair<iterator, bool> tmp;
 
-	ft_insert(mp, mp.begin(), T3(55, "fuzzy"));
+		std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+		tmp = mp.insert( T3( 42, "mdr" ) );
+		std::cout << "insert return: " << printPair( tmp.first );
+		std::cout << "Created new node: " << tmp.second << std::endl;
+		printSize( mp );
+	}
+	{
+		_pair<iterator, bool> tmp;
 
-	ft_insert(mp2, mp2.begin(), T3(1337, "beauty"));
-	ft_insert(mp2, mp2.end(), T3(1000, "Hello"));
-	ft_insert(mp2, mp2.end(), T3(1500, "World"));
+		std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+		tmp = mp.insert( T3( 50, "mdr" ) );
+		std::cout << "insert return: " << printPair( tmp.first );
+		std::cout << "Created new node: " << tmp.second << std::endl;
+		printSize( mp );
+	}
+	{
+		_pair<iterator, bool> tmp;
+
+		std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+		tmp = mp.insert( T3( 35, "funny" ) );
+		std::cout << "insert return: " << printPair( tmp.first );
+		std::cout << "Created new node: " << tmp.second << std::endl;
+		printSize( mp );
+	}
+	{
+		_pair<iterator, bool> tmp;
+
+		std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+		tmp = mp.insert( T3( 45, "bunny" ) );
+		std::cout << "insert return: " << printPair( tmp.first );
+		std::cout << "Created new node: " << tmp.second << std::endl;
+		printSize( mp );
+	}
+	{
+		_pair<iterator, bool> tmp;
+
+		std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+		tmp = mp.insert( T3( 21, "fizz" ) );
+		std::cout << "insert return: " << printPair( tmp.first );
+		std::cout << "Created new node: " << tmp.second << std::endl;
+		printSize( mp );
+	}
+	{
+		_pair<iterator, bool> tmp;
+
+		std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+		tmp = mp.insert( T3( 38, "buzz" ) );
+		std::cout << "insert return: " << printPair( tmp.first );
+		std::cout << "Created new node: " << tmp.second << std::endl;
+		printSize( mp );
+	}
+	{
+		iterator tmp;
+
+		std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+		tmp = mp.insert( mp.begin(), T3( 55, "fuzzy" ) );
+		std::cout << "insert return: " << printPair( tmp );
+		printSize( mp );
+	}
+
+	{
+		iterator tmp;
+
+		std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+		tmp = mp.insert( mp.begin(), T3( 55, "fuzzy" ) );
+		std::cout << "insert return: " << printPair( tmp );
+		printSize( mp );
+	}
+	
+	{
+		iterator tmp;
+
+		std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+		tmp = mp2.insert( mp2.begin(), T3( 1337, "beauty" ) );
+		std::cout << "insert return: " << printPair( tmp );
+		printSize( mp2 );
+	}
+	{
+		iterator tmp;
+
+		std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+		tmp = mp2.insert( mp2.end(), T3(1000, "Hello") );
+		std::cout << "insert return: " << printPair( tmp );
+		printSize( mp2 );
+	}
+	{
+		iterator tmp;
+
+		std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+		tmp = mp2.insert( mp2.end(), T3( 1500, "World" ) );
+		std::cout << "insert return: " << printPair( tmp );
+		printSize( mp2 );
+	}
 
 	return (0);
 }
