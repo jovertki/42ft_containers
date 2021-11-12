@@ -430,24 +430,27 @@ namespace ft {
 
 			ft::pair<ft::pair<iterator, bool>, treeNode*> out = insertReq( _root, NULL, temp );
 			_root = out.second;
-			_size++;
+			if (out.first.second)
+				_size++;
 			return out.first;
 		}
 		//(4)
-		// iterator insert( iterator hint, const value_type& value ) {
-		// 	pointer temp = _alloc.allocate( 1 );
-		// 	_alloc.construct( temp, value );
+		iterator insert( iterator hint, const value_type& value ) {
+			// pointer temp = _alloc.allocate( 1 );
+			// _alloc.construct( temp, value );
 
-		// 	ft::pair<ft::pair<iterator, bool>, treeNode*> out = insertReq( const_cast<treeNode*>(hint.getNode()), NULL, temp );
-		// 	if(_size == 0)
-		// 		_root = out.second;
-		// 	_size++;
-		// 	return out.first.first;
-		// }
+			// ft::pair<ft::pair<iterator, bool>, treeNode*> out = insertReq( const_cast<treeNode*>(hint.getNode()), NULL, temp );
+			// if(_size == 0)
+			// 	_root = out.second;
+			// _size++;
+			// return out.first.first;
+			hint = begin();
+			return (insert( value )).first;
+		}
 
 		//(7)
 		template< class InputIt >
-		void insert( InputIt first, InputIt last, typename ft::enable_if < !ft::is_integral<InputIt>::value || !ft::is_pair<InputIt, Key, T>::value, char>::type* = 0/*NULL*/ ) {
+		void insert( InputIt first, InputIt last, typename ft::enable_if < !ft::is_integral<InputIt>::value, char>::type* = 0/*NULL*/ ) {
 			while(first != last) {
 				insert( *first );
 				first++;
