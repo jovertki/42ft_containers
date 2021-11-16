@@ -18,7 +18,8 @@ namespace ft {
 		typedef typename ft::iterator_traits<Iterator>::reference
 			reference;
 
-		reverse_iterator( const Iterator& it = Iterator()) : _it( it - 1) {}
+		reverse_iterator( const Iterator& it = Iterator() ) : _it(it) {
+		}
 		reverse_iterator( reverse_iterator const& a ) : _it( a._it) {}
 		reverse_iterator& operator=( reverse_iterator const& a ) {
 			if(this != &a) {
@@ -26,12 +27,17 @@ namespace ft {
 			}
 			return* this;
 		}
+		
 		virtual ~reverse_iterator() {}
+		
 		iterator_type base() const {
-			return _it + 1;
+			return _it;
 		}
+		
 		reference operator*() const {
-			return *(_it);
+			Iterator out = _it;
+			out--;
+			return *(out);
 		}
 
 		//INCREMENTS DECREMENTS
@@ -63,14 +69,16 @@ namespace ft {
 			return *this;
 		}
 		pointer operator->() const {
-			return &(*_it);
+			Iterator out = _it;
+			out--;
+			return &(*out);
 		}
 		reference operator[]( const diff_type& index ) const {
 			return base()[-index - 1];
 		}
 
 		operator ft::reverse_iterator<ft::VectorIterator< const value_type> >() const {
-			return ft::reverse_iterator<ft::VectorIterator< const value_type> >( _it + 1);
+			return ft::reverse_iterator<ft::VectorIterator< const value_type> >( _it );
 		}
 	};
 
