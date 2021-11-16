@@ -106,68 +106,45 @@
 // 	// 	std::cout << "size2 is " << mymap2.size() << std::endl;
 // }
 
-
-
+#define T1 char
+#define T2 int
 #define TESTED_NAMESPACE ft
-#define T1 int
-#define T2 std::string
-typedef ft::pair<const T1, T2> T3;
-
-static int iter = 0;
-
-template <typename MAP, typename U>
-void	ft_erase( MAP& mp, U param )
+template <class MAP>
+void	cmp( const MAP& lhs, const MAP& rhs )
 {
-	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
-	mp.erase( param );
-	for (TESTED_NAMESPACE::map<T1, T2>::iterator it = mp.begin(); it != mp.end(); it++)
-		std::cout << (*it).first << "  " << (*it).second << std::endl;
-}
+	static int i = 0;
 
-template <typename MAP, typename U, typename V>
-void	ft_erase( MAP& mp, U param, V param2 )
-{
-	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
-	mp.erase( param, param2 );
-	for(TESTED_NAMESPACE::map<T1, T2>::iterator it = mp.begin(); it != mp.end(); it++)
-		std::cout << (*it).first << "  " << (*it).second << std::endl;
+	std::cout << "############### [" << i++ << "] ###############" << std::endl;
+	std::cout << "eq: " << (lhs == rhs) << " | ne: " << (lhs != rhs) << std::endl;
+	std::cout << "lt: " << (lhs < rhs) << " | le: " << (lhs <= rhs) << std::endl;
+	std::cout << "gt: " << (lhs > rhs) << " | ge: " << (lhs >= rhs) << std::endl;
 }
 
 int		main( void )
 {
-	std::list<T3> lst;
-	unsigned int lst_size = 10;
-	for(unsigned int i = 0; i < lst_size; ++i)
-		lst.push_back( T3( i, std::string( (lst_size - i), i + 65 ) ) );
-	TESTED_NAMESPACE::map<T1, T2> mp( lst.begin(), lst.end() );
+	TESTED_NAMESPACE::map<T1, T2> mp1;
+	TESTED_NAMESPACE::map<T1, T2> mp2;
 
-	std::cout << "original" << std::endl;
-	for(TESTED_NAMESPACE::map<T1, T2>::iterator it = mp.begin(); it != mp.end(); it++)
-		std::cout << (*it).first << "  " << (*it).second << std::endl;
+	mp1['a'] = 2; mp1['b'] = 3; mp1['c'] = 4; mp1['d'] = 5;
+	mp2['a'] = 2; mp2['b'] = 3; mp2['c'] = 4; mp2['d'] = 5;
 
-	ft_erase( mp, ++mp.begin() );
+	// cmp( mp1, mp1 ); // 0
+	// cmp( mp1, mp2 ); // 1
 
-	ft_erase( mp, mp.begin() );
+	mp2['e'] = 6; mp2['f'] = 7; mp2['h'] = 8; mp2['h'] = 9;
 
-	std::cout << (*(--mp.end())).second << std::endl;
-	ft_erase( mp, --mp.end() ); // <- here is the evidence
+	// cmp( mp1, mp2 ); // 2
+	// cmp( mp2, mp1 ); // 3
 
-	ft_erase( mp, mp.begin(), ++(++(++mp.begin())) );
-	ft_erase( mp, --(--(--mp.end())), --mp.end() );//<-incorrect size
+	(++(++mp1.begin()))->second = 42;
 
-	mp[10] = "Hello";
-	mp[11] = "Hi there";
-	std::cout << "with new elements" << std::endl;
-	for(TESTED_NAMESPACE::map<T1, T2>::iterator it = mp.begin(); it != mp.end(); it++)
-		std::cout << (*it).first << "  " << (*it).second << std::endl;
-	ft_erase( mp, --(--(--mp.end())), mp.end() );
+	cmp( mp1, mp2 ); // 4
+	cmp( mp2, mp1 ); // 5
 
+	swap( mp1, mp2 );
 
-	ft::vector<int> vec;
-	vec.push_back( 234 );
-	ft::vector<int>::iterator it = vec.begin();
-	std::cout << *it << std::endl;
+	cmp( mp1, mp2 ); // 6
+	cmp( mp2, mp1 ); // 7
 
-	vec.insert( it, 2, 3 );
-	
+	return (0);
 }

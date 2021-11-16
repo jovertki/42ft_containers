@@ -68,15 +68,14 @@ namespace ft {
 
 
 	//isConst
-	template <typename T> bool isConst( T& x )
+	template <typename T> bool isConst( T& )
 	{
-
-		return x != x;
+		return false;
 	}
 
-	template <typename T> bool isConst( T const& x )
+	template <typename T> bool isConst( T const&  )
 	{
-		return x == x;
+		return true;
 	}
 
 
@@ -132,7 +131,7 @@ namespace ft {
 
 	template< class T1, class T2 >
 	bool operator>( const ft::pair<T1, T2>& lhs, const ft::pair<T1, T2>& rhs ) {
-		if(lhs.first > rhs.first && lhs.second > rhs.second)
+		if(lhs.first < rhs.first || lhs.second < rhs.second)
 			return true;
 		return false;
 	}
@@ -146,7 +145,7 @@ namespace ft {
 
 	template< class T1, class T2 >
 	bool operator<( const ft::pair<T1, T2>& lhs, const ft::pair<T1, T2>& rhs ) {
-		if(lhs.first < rhs.first && lhs.second < rhs.second)
+		if(lhs.first < rhs.first || lhs.second < rhs.second)
 			return true;
 		return false;
 	}

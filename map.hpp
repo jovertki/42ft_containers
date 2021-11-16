@@ -752,5 +752,46 @@ namespace ft {
 
 	};
 
+	//compare
+	//==
+	template< class Key, class T, class Compare, class Allocator >
+		bool operator==( const ft::map<Key, T, Compare, Allocator>& lhs,
+			const ft::map<Key, T, Compare, Allocator>& rhs ) {
+			return lhs.size() == rhs.size() && \
+				ft::equal( lhs.begin(), lhs.end(), rhs.begin() ) && \
+				ft::equal( rhs.begin(), rhs.end(), lhs.begin() );
+		}
+	//!=
+	template< class Key, class T, class Compare, class Allocator >
+	bool operator!=( const ft::map<Key, T, Compare, Allocator>& lhs,
+		const ft::map<Key, T, Compare, Allocator>& rhs ) {
+		return !( lhs == rhs );
+	}
+	//<
+	template< class Key, class T, class Compare, class Allocator >
+	bool operator<( const ft::map<Key, T, Compare, Allocator>& lhs,
+		const ft::map<Key, T, Compare, Allocator>& rhs ) {
+		return ft::lexicographical_compare( lhs.begin(), lhs.end(), rhs.begin(), rhs.end() ) && \
+			lhs != rhs;
+	}
+	//<=
+	template< class Key, class T, class Compare, class Allocator >
+	bool operator<=( const ft::map<Key, T, Compare, Allocator > &lhs,
+		const ft::map<Key, T, Compare, Allocator>& rhs ) {
+		return lhs < rhs || lhs == rhs;
+	}
+	//>
+	template< class Key, class T, class Compare, class Allocator >
+	bool operator>( const ft::map<Key, T, Compare, Allocator>& lhs,
+		const ft::map<Key, T, Compare, Allocator>& rhs ) {
+		return !ft::lexicographical_compare( lhs.begin(), lhs.end(), rhs.begin(), rhs.end() ) && \
+			lhs != rhs;
+	}
+	//>=
+	template< class Key, class T, class Compare, class Allocator >
+	bool operator>=( const ft::map<Key, T, Compare, Allocator>& lhs,
+		const ft::map<Key, T, Compare, Allocator>& rhs ) {
+		return lhs > rhs || lhs == rhs;
+	}
 }
 
