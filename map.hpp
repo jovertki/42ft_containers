@@ -296,6 +296,196 @@ namespace ft {
 			_altn.deallocate( node, sizeof( treeNode ) );
 			_size -= 1;
 		}
+
+
+
+		//ERASE (1) STUFF BEGIN
+		treeNode* succeedWithTwo( const treeNode* node ) {
+			treeNode* donor = node->right;
+			while(donor->left != NULL)
+				donor = donor->left;
+			treeNode* successor = _altn.allocate( 1 );
+			_altn.construct( successor, treeNode( NULL, node->parent, node->right, node->left ) );
+			successor->value = _alloc.allocate( 1 );
+			_alloc.construct( successor->value, *donor->value );
+			node->right->parent = successor;
+			node->left->parent = successor;
+			if(node->parent == NULL) {
+				_root = successor;
+			}
+			else if(node->parent->left == node) {
+				node->parent->left = successor;
+			}
+			else if(node->parent->left == node) {
+				node->parent->right = successor;
+			}
+			update( successor );
+			erasePos( donor );
+			return successor;
+		}
+
+
+		treeNode* succeedNode( treeNode* successor, treeNode* node ) {
+			if(node->parent->left == node) {
+				node->parent->left = successor;
+				successor->parent = node->parent;
+			}
+			else {
+				node->parent->right = successor;
+				successor->parent = node->parent;
+			}
+			return successor;
+		}
+
+
+		void erasePos( treeNode* node ) {
+			treeNode* successor = NULL;
+			//erase leaf
+			if(!node->right && !node->left) {
+				if(node->parent != NULL) {
+					if(node->parent->left == node) {
+						node->parent->left = NULL;
+					}
+					else {
+						node->parent->right = NULL;
+					}
+				}
+			}
+			//erase with only one successor
+			else if(node->right && !node->left) {
+				successor = succeedNode( node->right, node );
+
+			}
+			else if(node->left && !node->right) {
+				successor = succeedNode( node->left, node );
+			}
+			//erase with two successors
+			else {
+				successor = succeedWithTwo( node );
+			}
+			update( successor );
+			update( node->parent );
+			balance( node->parent );
+			_alloc.deallocate( node->value, sizeof( value_type ) );
+			_altn.destroy( node );
+			_altn.deallocate( node, sizeof( treeNode ) );
+		}
+		//ERASE (1) STUFF END
+
+
+		//EVERYTHING BELOW IS FOR ERASE 3, MADE WITH REQURSION
+		treeNode* succeedNodeReq( treeNode* successor, treeNode* node, bool dealloc ) {
+			if(node->parent != NULL) {
+				if(node->parent->left == node) {
+					node->parent->left = successor;
+					successor->parent = node->parent;
+				}
+				else {
+					node->parent->right = successor;
+				}
+			}
+			successor->parent = node->parent;
+			if(dealloc) {
+				_alloc.deallocate( node->value, sizeof( value_type ) );
+				_altn.destroy( node );
+				_altn.deallocate( node, sizeof( treeNode ) );
+				node = NULL;
+			}
+			return successor;
+		}
+
+		treeNode* eraseLeaf( treeNode* node, bool dealloc ) {
+			treeNode* temp = node->parent;
+			if(node->parent != NULL) {
+				if(node->parent->left == node) {
+					node->parent->left = NULL;
+				}
+				else {
+					node->parent->right = NULL;
+				}
+			}
+			if(dealloc) {
+				_alloc.deallocate( node->value, sizeof( value_type ) );
+				_altn.destroy( node );
+				_altn.deallocate( node, sizeof( treeNode ) );
+				node = NULL;
+			}
+			return temp;
+		}
+
+		treeNode* eraseReq( treeNode* root, const Key& key, bool dealloc ) {
+			if(root == NULL) {
+			}
+			else if(root->value->first > key) {
+				eraseReq( root->left, key, dealloc );
+
+			}
+			else if(root->value->first < key) {
+				eraseReq( root->right, key, dealloc );
+			}
+			else if(root->value->first == key) {
+				if(!root->right && !root->left) {
+					eraseLeaf( root, dealloc );
+					root = NULL;
+					if(dealloc)
+						_size--;
+				}
+				else if(root->right && !root->left) {
+					root = succeedNodeReq( root->right, root, dealloc );
+					if(dealloc)
+						_size--;
+				}
+				else if(root->left && !root->right) {
+					root = succeedNodeReq( root->left, root, dealloc );
+					if(dealloc)
+						_size--;
+				}
+				else {
+					treeNode* donor = root->right;
+					while(donor->left != NULL)
+						donor = donor->left;
+					//there cant be left in donor
+					donor->left = root->left;
+					if(root->left)
+						root->left->parent = donor;
+
+					if(donor->parent) {
+						donor->parent->left = donor->right;
+					}
+					if(donor->right)
+						donor->right->parent = donor->parent;
+
+					if(root->right == donor)
+						donor->right = root->right->right;
+					else
+						donor->right = root->right;
+					if(donor->right)
+						donor->right->parent = donor;
+					donor->parent = root->parent;
+					if(donor->parent) {
+						if(donor->parent->left == root)
+							donor->parent->left = donor;
+						else
+							donor->parent->right = donor;
+					}
+					_alloc.deallocate( root->value, sizeof( value_type ) );
+					_altn.destroy( root );
+					_altn.deallocate( root, sizeof( treeNode ) );
+					root = NULL;
+					eraseReq( donor->right, donor->value->first, false );
+					update( donor );
+					root = balance( donor );
+					_size--;
+				}
+			}
+
+			update( root );
+			root = balance( root );
+			return root;
+		}
+		//END OF ERASE (3) STUFF
+
+		
 	public:
 		//BASE MEMBERS
 		//constructors
@@ -456,198 +646,6 @@ namespace ft {
 				first++;
 			}
 		}
-
-
-
-		//ERASE (1) STUFF BEGIN
-		treeNode* succeedWithTwo( const treeNode* node ) {
-			treeNode* donor = node->right;
-			while(donor->left != NULL)
-				donor = donor->left;
-			treeNode* successor = _altn.allocate( 1 );
-			_altn.construct( successor, treeNode( NULL, node->parent, node->right, node->left ) );
-			successor->value = _alloc.allocate( 1 );
-			_alloc.construct(successor->value, *donor->value);
-			node->right->parent = successor;
-			node->left->parent = successor;
-			if(node->parent == NULL) {
-				_root = successor;
-			}
-			else if(node->parent->left == node) {
-				node->parent->left = successor;
-			}
-			else if(node->parent->left == node){
-				node->parent->right = successor;
-			}
-			update( successor );
-			erasePos( donor );
-			return successor;
-		}
-
-		
-		treeNode* succeedNode( treeNode* successor, treeNode* node ) {
-			if(node->parent->left == node) {
-				node->parent->left = successor;
-				successor->parent = node->parent;
-			}
-			else {
-				node->parent->right = successor;
-				successor->parent = node->parent;
-			}
-			return successor;
-		}
-
-		
-		void erasePos( treeNode* node ) {
-			treeNode* successor = NULL;
-			//erase leaf
-			if(!node->right && !node->left) {
-				if(node->parent != NULL) {
-					if(node->parent->left == node) {
-						node->parent->left = NULL;
-					}
-					else {
-						node->parent->right = NULL;
-					}
-				}
-			}
-			//erase with only one successor
-			else if(node->right && !node->left) {
-				successor = succeedNode( node->right, node );
-			
-			}
-			else if(node->left && !node->right) {
-				successor = succeedNode( node->left, node );
-			}
-			//erase with two successors
-			else {
-				successor = succeedWithTwo( node );
-			}
-			update( successor );
-			update( node->parent );
-			balance( node->parent );
-			_alloc.deallocate( node->value, sizeof( value_type ) );
-			_altn.destroy( node );
-			_altn.deallocate( node, sizeof( treeNode ) );
-		}
-		//ERASE (1) STUFF END
-
-
-		//EVERYTHING BELOW IS FOR ERASE 3, MADE WITH REQURSION
-		treeNode* succeedNodeReq( treeNode* successor, treeNode* node, bool dealloc) {
-			if(node->parent != NULL) {
-				if(node->parent->left == node) {
-					node->parent->left = successor;
-					successor->parent = node->parent;
-				}
-				else {
-					node->parent->right = successor;
-				}
-			}
-			successor->parent = node->parent;
-			if(dealloc) {
-				_alloc.deallocate( node->value, sizeof( value_type ) );
-				_altn.destroy( node );
-				_altn.deallocate( node, sizeof( treeNode ) );
-				node = NULL;
-			}
-			return successor;
-		}
-
-		treeNode* eraseLeaf( treeNode* node, bool dealloc) {
-			treeNode* temp = node->parent;
-			if(node->parent != NULL) {
-				if(node->parent->left == node) {
-					node->parent->left = NULL;
-				}
-				else {
-					node->parent->right = NULL;
-				}
-			}
-			if(dealloc) {
-				_alloc.deallocate( node->value, sizeof( value_type ) );
-				_altn.destroy( node );
-				_altn.deallocate( node, sizeof( treeNode ) );
-				node = NULL;
-			}
-			return temp;
-		}
-		
-		treeNode* eraseReq( treeNode* root, const Key& key, bool dealloc) {
-			if(root == NULL) {
-			}
-			else if(root->value->first > key) {
-				eraseReq( root->left, key, dealloc );
-
-			}
-			else if(root->value->first < key) {
-				eraseReq( root->right, key, dealloc );
-			}
-			else if(root->value->first == key) {
-				if(!root->right && !root->left) {
-					eraseLeaf( root, dealloc );
-					root = NULL;
-					if(dealloc)
-						_size--;
-				}
-				else if(root->right && !root->left) {
-					root = succeedNodeReq( root->right, root, dealloc );
-					if (dealloc)
-						_size--;
-				}
-				else if(root->left && !root->right) {
-					root = succeedNodeReq( root->left, root, dealloc );
-					if(dealloc)
-						_size--;
-				}
-				else {
-					treeNode* donor = root->right;
-					while(donor->left != NULL)
-						donor = donor->left;
-					//there cant be left in donor
-					donor->left = root->left;
-					if(root->left)
-						root->left->parent = donor;
-
-					if(donor->parent) {
-						donor->parent->left = donor->right;
-					}
-					if(donor->right)
-						donor->right->parent = donor->parent;
-
-					if(root->right == donor)
-						donor->right = root->right->right;
-					else
-						donor->right = root->right;
-					if(donor->right)
-						donor->right->parent = donor;
-					donor->parent = root->parent;
-					if(donor->parent) {
-						if(donor->parent->left == root)
-							donor->parent->left = donor;
-						else
-							donor->parent->right = donor;
-					}
-					_alloc.deallocate( root->value, sizeof( value_type ) );
-					_altn.destroy( root );
-					_altn.deallocate( root, sizeof( treeNode ) );
-					root = NULL;
-					eraseReq( donor->right, donor->value->first, false );
-					update( donor );
-					root = balance( donor );
-					_size--;
-				}
-			}
-			
-			update( root );
-			root = balance( root );
-			return root;
-		}
-	//END OF ERASE (3) STUFF
-
-
-
-
 		
 		//erase
 		//(1)
@@ -680,7 +678,25 @@ namespace ft {
 		}
 		
 		//swap
+		void swap( map& other ) {
+			allocator_type _alloc_b = _alloc;
+			size_type _size_b = _size;
+			treeNode* _root_b = _root;
+			Compare _comp_b = _comp;
+			node_allocator_type _altn_b = _altn;
 
+			_alloc = other._alloc;
+			_size = other._size;
+			_root = other._root;
+			_comp = other._comp;
+			_altn = other._altn;
+
+			other._alloc = _alloc_b;
+			other._size = _size_b;
+			other._root = _root_b;
+			other._comp = _comp_b;
+			other._altn = _altn_b;
+		}
 
 		//LOOKUP
 		//count
@@ -749,6 +765,7 @@ namespace ft {
 			return value_compare( _comp );
 		}
 
+		
 
 	};
 
@@ -792,6 +809,13 @@ namespace ft {
 	bool operator>=( const ft::map<Key, T, Compare, Allocator>& lhs,
 		const ft::map<Key, T, Compare, Allocator>& rhs ) {
 		return lhs > rhs || lhs == rhs;
+	}
+
+
+	//ft::swap
+	template< class Key, class T, class Compare, class Allocator >
+	void swap( ft::map<Key, T, Compare, Allocator>& a, ft::map<Key, T, Compare, Allocator>& b ) {
+		a.swap( b );
 	}
 }
 
