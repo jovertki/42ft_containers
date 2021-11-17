@@ -625,16 +625,8 @@ namespace ft {
 			return out.first;
 		}
 		//(4)
-		iterator insert( iterator hint, const value_type& value ) {
-			// pointer temp = _alloc.allocate( 1 );
-			// _alloc.construct( temp, value );
+		iterator insert( iterator , const value_type& value ) {
 
-			// ft::pair<ft::pair<iterator, bool>, treeNode*> out = insertReq( const_cast<treeNode*>(hint.getNode()), NULL, temp );
-			// if(_size == 0)
-			// 	_root = out.second;
-			// _size++;
-			// return out.first.first;
-			hint = begin();
 			return (insert( value )).first;
 		}
 
