@@ -417,11 +417,11 @@ namespace ft {
 			if(root == NULL) {
 			}
 			else if(root->value->first > key) {
-				eraseReq( root->left, key, dealloc );
+				root->left = eraseReq( root->left, key, dealloc );
 
 			}
 			else if(root->value->first < key) {
-				eraseReq( root->right, key, dealloc );
+				root->right = eraseReq( root->right, key, dealloc );
 			}
 			else if(root->value->first == key) {
 				if(!root->right && !root->left) {
