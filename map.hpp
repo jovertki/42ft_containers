@@ -9,9 +9,6 @@
 #include "meta_functions.hpp"
 #include "utils.hpp"
 
-
-
-
 namespace ft {
 	template<
 		class Key,
@@ -43,8 +40,8 @@ namespace ft {
 		typedef typename Allocator::pointer			pointer;
 		typedef typename Allocator::const_pointer 	const_pointer;
 
-		typedef ft::MapIterator<Key, T, Compare> iterator;
-		typedef ft::MapIterator<Key, T, Compare>  const_iterator;//not sure
+		typedef ft::MapIterator<Key, T, false, Compare> iterator;
+		typedef ft::MapIterator<Key, T, true, Compare>  const_iterator;//not sure
 		typedef typename ft::reverse_iterator<iterator> reverse_iterator;
 		typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 		class treeNode {

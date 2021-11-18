@@ -20,7 +20,10 @@ namespace ft {
 
 		reverse_iterator( const Iterator& it = Iterator() ) : _it(it) {
 		}
-		reverse_iterator( reverse_iterator const& a ) : _it( a._it) {}
+		reverse_iterator( reverse_iterator const& a ) : _it( a._it ) {}
+		template <typename U>
+		reverse_iterator( const reverse_iterator<U>& copy ) : _it( copy.base() ) {}
+	
 		reverse_iterator& operator=( reverse_iterator const& a ) {
 			if(this != &a) {
 				_it = a._it;

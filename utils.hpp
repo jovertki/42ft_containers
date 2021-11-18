@@ -158,5 +158,17 @@ namespace ft {
 	}
 
 
+	// conditional
+	template <bool B, typename U, typename V>
+	struct conditional {
+		typedef V type;
+	};
 
+	template <typename U, typename V>
+	struct conditional<true, U, V> {
+		typedef U type;
+	};
+	// --------------- end : conditional
+
+	
 }
