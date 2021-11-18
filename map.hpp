@@ -617,8 +617,12 @@ namespace ft {
 
 			ft::pair<ft::pair<iterator, bool>, treeNode*> out = insertReq( _root, NULL, temp );
 			_root = out.second;
-			if (out.first.second)
+			if(out.first.second)
 				_size++;
+			else {
+				_alloc.destroy( temp );
+				_alloc.deallocate( temp, sizeof( value_type ) );
+			}
 			return out.first;
 		}
 		//(4)
