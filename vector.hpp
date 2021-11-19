@@ -117,8 +117,16 @@ namespace ft {
 		//(1)
 		void assign( size_type count, const value_type& value ) {
 			clear();
-			for(size_type i = 0; i < count; i++) {
-				push_back(value);
+			if(capacity() < count) {
+				reserve( count );
+				for(size_type i = 0; i < count; i++) {
+					push_back(value);
+				}	
+			}
+			else {
+				for(size_type i = 0; i < count; i++) {
+					push_back( value );
+				}
 			}
 		}
 		// //(2)
@@ -243,7 +251,15 @@ namespace ft {
 		//reserve
 		void reserve( size_type new_cap ) {
 			if(new_cap > capacity()) {
-				realloc( new_cap );
+				if(capacity() == 0)
+					realloc( new_cap );
+				else {
+					size_type new_cap_mod = capacity();
+					while(new_cap_mod < new_cap) {
+						new_cap_mod = new_cap_mod * 2;
+					}
+					realloc( new_cap_mod );
+				}
 			}
 		}
 		
@@ -381,14 +397,14 @@ namespace ft {
 		//(2)
 		void resize( size_type count, value_type value = value_type() ) {
 			if(size() < count) {
-				realloc( count );
+				reserve( count );
 				for(size_type i = size(); i < count; i++) {
 					_alloc.construct( &_data[i], value );
 					_size = count;
 				}
 			}
 			else {
-				realloc( count );
+				_size = count;
 			}
 		}
 
@@ -417,7 +433,7 @@ namespace ft {
 	template< class T, class Alloc >
 	bool operator==( const ft::vector<T, Alloc>& lhs,
 		const ft::vector<T, Alloc>& rhs ) {
-		return ft::equal( lhs.begin(), lhs.end(), rhs.begin() ) && ft::equal( rhs.begin(), rhs.end(), lhs.begin() );
+		return lhs.size() == rhs.size() && ft::equal( lhs.begin(), lhs.end(), rhs.begin() ) && ft::equal( rhs.begin(), rhs.end(), lhs.begin() );
 	}
 	//!=
 	template< class T, class Alloc >
