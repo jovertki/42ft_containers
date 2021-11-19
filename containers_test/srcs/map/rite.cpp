@@ -22,6 +22,7 @@ int		main(void)
 
 	std::cout << "HERE" << std::endl;
 	printPair( it.base() );
+	std::cout << "HERE" << std::endl;
 	printPair(inc(it.base(), 1));
 
 	std::cout << "TEST OFFSET" << std::endl;
