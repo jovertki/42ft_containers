@@ -92,7 +92,6 @@ namespace ft {
 
 		//destructor
 		virtual ~vector() {
-			
 			clear();
 			_alloc.deallocate( _data, _capacity );
 		}
@@ -133,6 +132,9 @@ namespace ft {
 		template< class InputIt >
 		void assign( InputIt first, InputIt last, typename ft::enable_if<!ft::is_integral<InputIt>::value, char>::type* = 0/*NULL*/ ) {
 			clear();
+			size_type dist = ft::distance( first, last );
+			if(capacity() < dist)
+				realloc( dist );
 			while(first != last) {
 				push_back( *first );
 				first++;
@@ -291,7 +293,9 @@ namespace ft {
 				}
 			}		
 			for(iterator it = end(); &(*it) != &(*pos) && it != begin(); it--) {
-				*it = *(it - 1);
+
+				_alloc.destroy( &(*it) );
+				_alloc.construct( &(*it), *(it - 1) );
 			}
 			_alloc.construct( &(*pos), value );
 			_size++;
