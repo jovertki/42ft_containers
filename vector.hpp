@@ -31,26 +31,37 @@ namespace ft {
 		size_type _capacity;
 		value_type* _data;
 
-		void realloc( size_type newCapacity ) {
+		value_type* realloc( size_type newCapacity, bool replace_data = true ) {
 			value_type* new_data = 0;//NULL
 			try {
 				new_data = _alloc.allocate( newCapacity );
 			}
 			catch(std::exception& e) {
 				_alloc.deallocate( new_data, newCapacity );
-				return;
+				return NULL;
 			}
 			size_type new_size = _size;
 			if(newCapacity < _size)
 				new_size = newCapacity;
 			for(size_type i = 0; i < new_size; i++) {
 				_alloc.construct( &new_data[i], _data[i] );
-				_alloc.destroy( &_data[i] );
 			}
-			_alloc.deallocate( _data, _capacity );
-			_data = new_data;
-			_capacity = newCapacity;
-			_size = new_size;
+			//switch for insert exception
+			if(replace_data)
+			{
+				for(size_type i = 0; i < new_size; i++) {
+					_alloc.destroy( &_data[i] );
+				}
+				_alloc.deallocate( _data, _capacity );
+				_data = new_data;
+				_capacity = newCapacity;
+				_size = new_size;
+				return NULL;
+			}
+			else {
+				//in case of exception
+				return new_data;
+			}
 		}
 	public:
 		//BASE MEMBERS
