@@ -131,7 +131,7 @@ namespace ft {
 
 	template< class T1, class T2 >
 	bool operator>( const ft::pair<T1, T2>& lhs, const ft::pair<T1, T2>& rhs ) {
-		if(lhs.first < rhs.first || lhs.second < rhs.second)
+		if(lhs.first > rhs.first || lhs.second > rhs.second)
 			return true;
 		return false;
 	}
