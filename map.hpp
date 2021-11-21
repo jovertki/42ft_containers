@@ -413,14 +413,14 @@ namespace ft {
 		treeNode* eraseReq( treeNode* root, const Key& key, bool dealloc ) {
 			if(root == NULL) {
 			}
-			else if(root->value->first > key) {
+			else if  (_comp(key, root->value->first)) {
 				root->left = eraseReq( root->left, key, dealloc );
 
 			}
-			else if(root->value->first < key) {
+			else if (_comp( root->value->first, key )) {
 				root->right = eraseReq( root->right, key, dealloc );
 			}
-			else if(root->value->first == key) {
+			else if (keysEqual( root->value->first, key )) {
 				if(!root->right && !root->left) {
 					eraseLeaf( root, dealloc );
 					root = NULL;
