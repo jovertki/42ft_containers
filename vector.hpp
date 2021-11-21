@@ -293,24 +293,34 @@ namespace ft {
 		//insert
 		//(1)
 		iterator insert( iterator pos, const value_type& value ) {
-			if(pos > end())
-				return pos;
-			if(size() == capacity()) {
-				difference_type temp = pos - begin();
-				realloc(_capacity * 2);
-				pos = begin();
-				for(difference_type i = 0; i < temp; i++) {
-					pos++;
+			bool garantee = (pos == end());
+			ft::vector<T, Allocator> temp;
+			if(garantee)
+				temp = *this ;
+			try {
+				if(pos > end())
+					return pos;
+				if(size() == capacity()) {
+					difference_type temp = pos - begin();
+					realloc( _capacity * 2 );
+					pos = begin();
+					for(difference_type i = 0; i < temp; i++) {
+						pos++;
+					}
 				}
-			}		
-			for(iterator it = end(); &(*it) != &(*pos) && it != begin(); it--) {
-
-				_alloc.destroy( &(*it) );
-				_alloc.construct( &(*it), *(it - 1) );
+				for(iterator it = end(); &(*it) != &(*pos) && it != begin(); it--) {
+					_alloc.destroy( &(*it) );
+					_alloc.construct( &(*it), *(it - 1) );
+				}
+				_alloc.construct( &(*pos), value );
+				_size++;
+				return pos;
 			}
-			_alloc.construct( &(*pos), value );
-			_size++;
-			return pos;
+			catch(...) {
+				if(garantee)
+					*this = temp;
+				throw;
+			}
 		}
 		//(3)
 		void insert( iterator pos, size_type count, const value_type& value ) {
@@ -337,12 +347,27 @@ namespace ft {
 		// //(4)
 		template< class InputIt >
 		void insert( iterator pos, InputIt first, InputIt last, typename ft::enable_if<!ft::is_integral<InputIt>::value, char>::type* = 0/*NULL*/ ) {
+			try {
+				if(sizeof( value_type ) != sizeof( typename InputIt::value_type )) {
+					throw std::logic_error( "error value type" );
+				}
+			}
+			catch(...) {
+				throw;
+			}
 			difference_type count = ft::distance( first, last );
 			if(count == 0)
 				return;
 			if(size() + count > capacity()) {
 				difference_type temp = pos - begin();
-				realloc( (size() + count) * 1.5 );
+
+				if(_capacity == 0)
+					_capacity = (size() + count);
+				else {
+					while(_capacity < (size() + count))
+						_capacity *= 2;
+				}
+				realloc( _capacity );
 				pos = begin();
 				for(difference_type i = 0; i < temp; i++) {
 					pos++;
@@ -358,7 +383,6 @@ namespace ft {
 				first++;
 			}
 		}
-
 		//erase
 		//(1)
 		iterator erase( iterator pos ) {
