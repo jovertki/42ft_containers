@@ -5,7 +5,7 @@
 #include "map.hpp"
 
 namespace ft {
-	template <class Key, class T, bool isConst, class Compare = std::less<Key> >
+	template <class Key, class T, bool isConst >
 	class MapIterator : public iterator<bidirectional_iterator_tag, T> {
 	private:
 	public:
@@ -15,8 +15,6 @@ namespace ft {
 			mapped_type;
 		typedef ft::pair<const Key, T>
 			value_type;
-		typedef Compare
-			key_compare;
 
 		typedef typename conditional<isConst, const value_type, value_type>::type true_value_type;
 		
@@ -28,7 +26,7 @@ namespace ft {
 			pointer;
 		typedef typename iterator<bidirectional_iterator_tag, true_value_type>::reference
 			reference;
-		typedef typename ft::map<Key, T, Compare>::treeNode treeNode;
+		typedef typename ft::map<Key, T>::treeNode treeNode;
 	private:
 		const treeNode* _nodePtr;
 		const treeNode* _tree;
@@ -142,23 +140,23 @@ namespace ft {
 		//methods are doubled to handle iterator<int> == iterator<const int>
 
 		//==
-		template <class Keyy, class T1, bool Const1, bool Const2, class Comp>
-		friend bool operator==( const MapIterator<Keyy, T1, Const1, Comp>& a, const MapIterator<Keyy, T1, Const2, Comp>& b ) {
+		template <class Keyy, class T1, bool Const1, bool Const2>
+		friend bool operator==( const MapIterator<Keyy, T1, Const1>& a, const MapIterator<Keyy, T1, Const2>& b ) {
 			return (a._nodePtr == b._nodePtr);
 		}
-		template <class Keyy, class T1, bool Const1, class Comp>
+		template <class Keyy, class T1, bool Const1>
 		friend bool operator==( const MapIterator<Keyy, T1, Const1>& a, const MapIterator<Keyy, T1, Const1>& b ) {
 			return (a._nodePtr == b._nodePtr);
 		}
 		
 
 		//!=
-		template <class Keyy, class T1, bool Const1, bool Const2, class Comp>
-		friend bool operator!=( const MapIterator<Keyy, T1, Const1, Comp>& a, const MapIterator<Keyy, T1, Const2, Comp>& b ) {
+		template <class Keyy, class T1, bool Const1, bool Const2>
+		friend bool operator!=( const MapIterator<Keyy, T1, Const1>& a, const MapIterator<Keyy, T1, Const2>& b ) {
 			return (a._nodePtr != b._nodePtr);
 		}
-		template <class Keyy, class T1, bool Const1, class Comp>
-		friend bool operator!=( const MapIterator<Keyy, T1, Const1, Comp>& a, const MapIterator<Keyy, T1, Const1, Comp>& b ) {
+		template <class Keyy, class T1, bool Const1>
+		friend bool operator!=( const MapIterator<Keyy, T1, Const1>& a, const MapIterator<Keyy, T1, Const1>& b ) {
 			return (a._nodePtr != b._nodePtr);
 		}
 

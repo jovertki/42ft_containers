@@ -40,28 +40,28 @@ namespace ft {
 		typedef typename Allocator::pointer			pointer;
 		typedef typename Allocator::const_pointer 	const_pointer;
 
-		typedef ft::MapIterator<Key, T, false, Compare> iterator;
-		typedef ft::MapIterator<Key, T, true, Compare>  const_iterator;//not sure
+		typedef ft::MapIterator<Key, T, false> iterator;
+		typedef ft::MapIterator<Key, T, true>  const_iterator;//not sure
 		typedef typename ft::reverse_iterator<iterator> reverse_iterator;
 		typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
-		class treeNode {
-			public:
-			value_type* value;
-			treeNode* right;
-			treeNode* left;
-			treeNode* parent;
-			int balanceFactor;
-			int height;
-			treeNode( const value_type* value, treeNode* parent = NULL, treeNode* right = NULL, treeNode* left = NULL )
-				: value( const_cast<value_type*>(value) ), right( right ), left( left ), parent( parent ), balanceFactor( 0 ), height( 0 ) {}
-			value_type* getValue() {
-				return value;
-			}
-			const value_type* getValue() const{
-				return value;
-			}
-		};
-
+		// class treeNode {
+		// 	public:
+		// 	value_type* value;
+		// 	treeNode* right;
+		// 	treeNode* left;
+		// 	treeNode* parent;
+		// 	int balanceFactor;
+		// 	int height;
+		// 	treeNode( const value_type* value, treeNode* parent = NULL, treeNode* right = NULL, treeNode* left = NULL )
+		// 		: value( const_cast<value_type*>(value) ), right( right ), left( left ), parent( parent ), balanceFactor( 0 ), height( 0 ) {}
+		// 	value_type* getValue() {
+		// 		return value;
+		// 	}
+		// 	const value_type* getValue() const{
+		// 		return value;
+		// 	}
+		// };
+		typedef treeNode<Key, T> treeNode;
 		
 	private:
 

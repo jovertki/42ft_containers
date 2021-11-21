@@ -170,5 +170,29 @@ namespace ft {
 	};
 	// --------------- end : conditional
 
+
+	template <class Key, class T>
+	class treeNode {
+	public:
+		typedef ft::pair<const Key, T> value_type;
+		value_type* value;
+		treeNode* right;
+		treeNode* left;
+		treeNode* parent;
+		int balanceFactor;
+		int height;
+		treeNode( const value_type* value, treeNode* parent = NULL, treeNode* right = NULL, treeNode* left = NULL )
+			: value( const_cast<value_type*>(value) ), right( right ), left( left ), parent( parent ), balanceFactor( 0 ), height( 0 ) {}
+		value_type* getValue() {
+			return value;
+		}
+		const value_type* getValue() const {
+			return value;
+		}
+	};
+
+
+
+
 	
 }
