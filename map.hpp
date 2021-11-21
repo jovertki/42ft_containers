@@ -623,6 +623,8 @@ namespace ft {
 				_alloc.destroy( temp );
 				_alloc.deallocate( temp, sizeof( value_type ) );
 			}
+			if(_size == 1 && out.second)
+				return ft::make_pair(iterator( _root, _root ), true);
 			return out.first;
 		}
 		//(4)

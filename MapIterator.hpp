@@ -105,8 +105,8 @@ namespace ft {
 			else
 				if(_nodePtr->left != NULL)
 				{
-					// successor is the farthest left node of
-					// right subtree
+					// successor is the farthest right node of
+					// left subtree
 					_nodePtr = _nodePtr->left;
 
 					while(_nodePtr->right != NULL) {
