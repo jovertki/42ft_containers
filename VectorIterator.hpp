@@ -3,17 +3,17 @@
 
 namespace ft {
 	template <class T>
-	class VectorIterator : public iterator<random_access_iterator_tag, T>{
+	class VectorIterator : public iterator<std::random_access_iterator_tag, T>{
 	public:
-		typedef typename iterator<random_access_iterator_tag, T>::iterator_category
+		typedef typename iterator<std::random_access_iterator_tag, T>::iterator_category
 			iterator_category;
-		typedef typename iterator<random_access_iterator_tag, T>::value_type
+		typedef typename iterator<std::random_access_iterator_tag, T>::value_type
 			value_type;
-		typedef typename iterator<random_access_iterator_tag, T>::difference_type
+		typedef typename iterator<std::random_access_iterator_tag, T>::difference_type
 			diff_type;
-		typedef typename iterator<random_access_iterator_tag, T>::pointer
+		typedef typename iterator<std::random_access_iterator_tag, T>::pointer
 			pointer;
-		typedef typename iterator<random_access_iterator_tag, T>::reference
+		typedef typename iterator<std::random_access_iterator_tag, T>::reference
 			reference;
 		typedef std::size_t size_type;
 	private:

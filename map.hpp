@@ -41,26 +41,9 @@ namespace ft {
 		typedef typename Allocator::const_pointer 	const_pointer;
 
 		typedef ft::MapIterator<Key, T, false> iterator;
-		typedef ft::MapIterator<Key, T, true>  const_iterator;//not sure
+		typedef ft::MapIterator<Key, T, true>  const_iterator;
 		typedef typename ft::reverse_iterator<iterator> reverse_iterator;
 		typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
-		// class treeNode {
-		// 	public:
-		// 	value_type* value;
-		// 	treeNode* right;
-		// 	treeNode* left;
-		// 	treeNode* parent;
-		// 	int balanceFactor;
-		// 	int height;
-		// 	treeNode( const value_type* value, treeNode* parent = NULL, treeNode* right = NULL, treeNode* left = NULL )
-		// 		: value( const_cast<value_type*>(value) ), right( right ), left( left ), parent( parent ), balanceFactor( 0 ), height( 0 ) {}
-		// 	value_type* getValue() {
-		// 		return value;
-		// 	}
-		// 	const value_type* getValue() const{
-		// 		return value;
-		// 	}
-		// };
 		typedef treeNode<Key, T> treeNode;
 		
 	private:
@@ -293,82 +276,6 @@ namespace ft {
 			_altn.deallocate( node, sizeof( treeNode ) );
 			_size -= 1;
 		}
-
-
-
-		//ERASE (1) STUFF BEGIN
-		treeNode* succeedWithTwo( const treeNode* node ) {
-			treeNode* donor = node->right;
-			while(donor->left != NULL)
-				donor = donor->left;
-			treeNode* successor = _altn.allocate( 1 );
-			_altn.construct( successor, treeNode( NULL, node->parent, node->right, node->left ) );
-			successor->value = _alloc.allocate( 1 );
-			_alloc.construct( successor->value, *donor->value );
-			node->right->parent = successor;
-			node->left->parent = successor;
-			if(node->parent == NULL) {
-				_root = successor;
-			}
-			else if(node->parent->left == node) {
-				node->parent->left = successor;
-			}
-			else if(node->parent->left == node) {
-				node->parent->right = successor;
-			}
-			update( successor );
-			erasePos( donor );
-			return successor;
-		}
-
-
-		treeNode* succeedNode( treeNode* successor, treeNode* node ) {
-			if(node->parent->left == node) {
-				node->parent->left = successor;
-				successor->parent = node->parent;
-			}
-			else {
-				node->parent->right = successor;
-				successor->parent = node->parent;
-			}
-			return successor;
-		}
-
-
-		void erasePos( treeNode* node ) {
-			treeNode* successor = NULL;
-			//erase leaf
-			if(!node->right && !node->left) {
-				if(node->parent != NULL) {
-					if(node->parent->left == node) {
-						node->parent->left = NULL;
-					}
-					else {
-						node->parent->right = NULL;
-					}
-				}
-			}
-			//erase with only one successor
-			else if(node->right && !node->left) {
-				successor = succeedNode( node->right, node );
-
-			}
-			else if(node->left && !node->right) {
-				successor = succeedNode( node->left, node );
-			}
-			//erase with two successors
-			else {
-				successor = succeedWithTwo( node );
-			}
-			update( successor );
-			update( node->parent );
-			balance( node->parent );
-			_alloc.deallocate( node->value, sizeof( value_type ) );
-			_altn.destroy( node );
-			_altn.deallocate( node, sizeof( treeNode ) );
-		}
-		//ERASE (1) STUFF END
-
 
 		//EVERYTHING BELOW IS FOR ERASE 3, MADE WITH REQURSION
 		treeNode* succeedNodeReq( treeNode* successor, treeNode* node, bool dealloc ) {

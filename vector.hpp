@@ -84,7 +84,7 @@ namespace ft {
 		//range constructor
 		template <class InputIterator>
 		vector( InputIterator first, InputIterator last,
-			const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, char>::type* = 0/*NULL*/ ) : _alloc( alloc ), _size( ft::distance( first, last ) ), _capacity( _size ), _data( _alloc.allocate( _size ) ) {
+			const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, char>::type* = 0/*NULL*/ ) : _alloc( alloc ), _size( std::distance( first, last ) ), _capacity( _size ), _data( _alloc.allocate( _size ) ) {
 			size_type i = 0;
 			for(; first != last; first++) {
 				_alloc.construct( &_data[i], *first);
@@ -143,7 +143,7 @@ namespace ft {
 		template< class InputIt >
 		void assign( InputIt first, InputIt last, typename ft::enable_if<!ft::is_integral<InputIt>::value, char>::type* = 0/*NULL*/ ) {
 			clear();
-			size_type dist = ft::distance( first, last );
+			size_type dist = std::distance( first, last );
 			if(capacity() < dist)
 				realloc( dist );
 			while(first != last) {
@@ -355,7 +355,7 @@ namespace ft {
 			catch(...) {
 				throw;
 			}
-			difference_type count = ft::distance( first, last );
+			difference_type count = std::distance( first, last );
 			if(count == 0)
 				return;
 			if(size() + count > capacity()) {
@@ -395,7 +395,7 @@ namespace ft {
 		}
 		//(2)
 		iterator erase( iterator first, iterator last ) {
-			difference_type temp = ft::distance(first, last);
+			difference_type temp = std::distance(first, last);
 			iterator out = first;
 			for(iterator it = first; it != last; it++) {
 				_alloc.destroy( &(*it) );
@@ -506,10 +506,10 @@ namespace ft {
 		}
 
 	
-	//ft::swap
-	template <class T, class Alloc>
-	void swap( ft::vector<T, Alloc>& a, ft::vector<T, Alloc>& b ) {
-		a.swap( b );
-	}
+}
+//ft::swap
+template <class T, class Alloc>
+void swap( ft::vector<T, Alloc>& a, ft::vector<T, Alloc>& b ) {
+	a.swap( b );
 }
 

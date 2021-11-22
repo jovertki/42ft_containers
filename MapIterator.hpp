@@ -6,7 +6,7 @@
 
 namespace ft {
 	template <class Key, class T, bool isConst >
-	class MapIterator : public iterator<bidirectional_iterator_tag, T> {
+	class MapIterator : public iterator<std::bidirectional_iterator_tag, T> {
 	private:
 	public:
 		typedef Key
@@ -18,13 +18,13 @@ namespace ft {
 
 		typedef typename conditional<isConst, const value_type, value_type>::type true_value_type;
 		
-		typedef typename iterator<bidirectional_iterator_tag, value_type>::iterator_category
+		typedef typename iterator<std::bidirectional_iterator_tag, value_type>::iterator_category
 			iterator_category;
-		typedef typename iterator<bidirectional_iterator_tag, value_type>::difference_type
+		typedef typename iterator<std::bidirectional_iterator_tag, value_type>::difference_type
 			diff_type;
-		typedef typename iterator<bidirectional_iterator_tag, true_value_type>::pointer
+		typedef typename iterator<std::bidirectional_iterator_tag, true_value_type>::pointer
 			pointer;
-		typedef typename iterator<bidirectional_iterator_tag, true_value_type>::reference
+		typedef typename iterator<std::bidirectional_iterator_tag, true_value_type>::reference
 			reference;
 		typedef typename ft::map<Key, T>::treeNode treeNode;
 	private:

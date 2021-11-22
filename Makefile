@@ -6,7 +6,6 @@ DEP		= $(patsubst %.o, %.d,$(OBJ))
 CFLAGS	= -Wall -Werror -Wextra -Wshadow -Wno-shadow -std=c++98
 CC		= clang++
 
-CFLAGS	= -g -std=c++98
 
 all: $(NAME)
 
