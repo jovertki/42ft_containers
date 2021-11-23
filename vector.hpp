@@ -317,6 +317,7 @@ namespace ft {
 				return pos;
 			}
 			catch(...) {
+				//need to free mem here lol
 				if(garantee)
 					*this = temp;
 				throw;
@@ -347,14 +348,6 @@ namespace ft {
 		// //(4)
 		template< class InputIt >
 		void insert( iterator pos, InputIt first, InputIt last, typename ft::enable_if<!ft::is_integral<InputIt>::value, char>::type* = 0/*NULL*/ ) {
-			try {
-				if(sizeof( value_type ) != sizeof( typename InputIt::value_type )) {
-					throw std::logic_error( "error value type" );
-				}
-			}
-			catch(...) {
-				throw;
-			}
 			difference_type count = std::distance( first, last );
 			if(count == 0)
 				return;
@@ -506,10 +499,10 @@ namespace ft {
 		}
 
 	
-}
-//ft::swap
-template <class T, class Alloc>
-void swap( ft::vector<T, Alloc>& a, ft::vector<T, Alloc>& b ) {
-	a.swap( b );
+	//ft::swap
+	template <class T, class Alloc>
+	void swap( ft::vector<T, Alloc>& a, ft::vector<T, Alloc>& b ) {
+		a.swap( b );
+	}
 }
 
