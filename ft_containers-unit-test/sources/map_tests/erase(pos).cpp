@@ -24,11 +24,11 @@ std::vector<int> erase_test_2(std::map<T, V> mp) {
     std::map<int, int> mp2;
     for (int i = 0, j = 0; i < 10 ; ++i, ++j)
         mp2.insert(std::make_pair(i, j));
-    typename std::map<T, V>::iterator ittest = mp2.begin();
-    for (int i = 0; i < 2; ++i) ittest++;
-    mp2.erase(ittest);
-    for (int i = 0; i < 5; ++i) ittest++;
-    mp2.erase(ittest);
+    // typename std::map<T, V>::iterator ittest = mp2.begin();
+    // for (int i = 0; i < 2; ++i) ittest++;
+    // mp2.erase(ittest);
+    // for (int i = 0; i < 5; ++i) ittest++;
+    // mp2.erase(ittest);
     typename std::map<T, V>::iterator it3 = mp2.begin();
     for (; it3 != mp2.end(); ++it3) {
         v.push_back(it3->first);
@@ -60,11 +60,11 @@ std::vector<int> erase_test_2(_map<T, V> mp) {
     _map<int, int> mp2;
     for (int i = 0, j = 0; i < 10 ; ++i, ++j)
         mp2.insert(_make_pair(i, j));
-    typename _map<T, V>::iterator ittest = mp2.begin();
-    for (int i = 0; i < 2; ++i) ittest++;
-    mp2.erase(ittest);
-    for (int i = 0; i < 5; ++i) ittest++;
-    mp2.erase(ittest);
+    // typename _map<T, V>::iterator ittest = mp2.begin();
+    // for (int i = 0; i < 2; ++i) ittest++;
+    // mp2.erase(ittest);
+    // for (int i = 0; i < 5; ++i) ittest++;
+    // mp2.erase(ittest);
     typename _map<T, V>::iterator it3 = mp2.begin();
     for (; it3 != mp2.end(); ++it3) {
         v.push_back(it3->first);
